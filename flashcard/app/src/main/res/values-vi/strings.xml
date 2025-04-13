@@ -8,6 +8,10 @@
     <string name="nav_open_drawer">Mở thanh điều hướng</string>
     <string name="nav_close_drawer">Đóng thanh điều hướng</string>
     <string name="create_set">Tạo Bộ Thẻ Nhớ</string>
-
+    <string name="cancel_set">Hủy</string>
+    <string name="ok">OK</string>
+    <string name="data_unavailable_message">Dữ liệu không có sẵn</string>
+    <string name="empty_set">Bộ thẻ này rỗng</string>
+    <string name="add">Thêm</string>
 
 </resources>

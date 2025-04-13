@@ -11,7 +11,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.example.flashcard.drawer.FlashCardSetFragment;
 import com.example.flashcard.drawer.HelpFragment;
