@@ -10,8 +10,29 @@
     <string name="create_set">Tạo Bộ Thẻ Nhớ</string>
     <string name="cancel_set">Hủy</string>
     <string name="ok">OK</string>
+
+
     <string name="data_unavailable_message">Dữ liệu không có sẵn</string>
+    <string name="data_empty">Data trống</string>
+
+
     <string name="empty_set">Bộ thẻ này rỗng</string>
+
     <string name="add">Thêm</string>
+    <string name="support_title">Trợ Giúp</string>
+    <string name="support_use">Sử dụng ứng dụng</string>
+    <string name="support_community">Cộng đồng</string>
+    <string name="support_privacy">Privacy</string>
+
+    <string name="help_title">Hỗ Trợ</string>
+    <string name="help_donate">Donate</string>
+    <string name="help_rate">Đánh giá</string>
+    <string name="help_feedback">Phản hồi</string>
+
+    <string name="create_card">Tạo Thẻ Nhớ</string>
+    <string name="front">Mặt trước</string>
+    <string name="back">Mặt sau</string>
+
+    <string name="learn_title">Học Bài</string>
 
 </resources>

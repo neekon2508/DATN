@@ -13,8 +13,17 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
-            android:name=".CreateCardSetDialogBoxActivity"
+            android:name=".method.LearnActivity"
             android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".method.CreateCardActivity"
+            android:exported="false"
+            android:label="@string/create_card"
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

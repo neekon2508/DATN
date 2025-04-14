@@ -1,6 +1,7 @@
 package com.example.flashcard.drawer;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -25,6 +26,8 @@ import android.widget.Toast;
 import com.example.flashcard.R;
 import com.example.flashcard.data.FlashCardSQLiteHelper;
 
+import com.example.flashcard.method.CreateCardActivity;
+import com.example.flashcard.method.LearnActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -110,12 +113,16 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
                              "CARDSETID=?", new String[] {Integer.toString((int)id)}, null, null, null);)
                 {
                     if (cardsCursor.moveToFirst()) {
-
+                        Intent intent = new Intent(getActivity(), LearnActivity.class);
+                        intent.putExtra(CreateCardActivity.EXTRA_CARDSETID, String.valueOf(id));
+                        startActivity(intent);
                     }
                     else {
                         Snackbar snackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), R.string.empty_set, Snackbar.LENGTH_LONG);
                         snackbar.setAction(R.string.add, t -> {
-                            Toast.makeText(getContext(), "Test", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getActivity(), CreateCardActivity.class);
+                            intent.putExtra(CreateCardActivity.EXTRA_CARDSETID, String.valueOf(id));
+                            startActivity(intent);
                         });
                         snackbar.show();
                     }

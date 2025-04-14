@@ -38,8 +38,8 @@ public class FlashCardSQLiteHelper extends SQLiteOpenHelper {
                     "UPDATEDAT TEXT NOT NULL);");
             db.execSQL("CREATE TABLE CARD ( " +
                     "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "FRONTEXT TEXT NOT NULL, " +
-                    "BEHINDTEX TEXT NOT NULL, " +
+                    "FRONTTEXT TEXT NOT NULL, " +
+                    "BACKTEXT TEXT NOT NULL, " +
                     "CREATEDAT TEXT NOT NULL, " +
                     "UPDATEDAT TEXT NOT NULL, " +
                     "CARDSETID INTEGER NOT NULL, " +
@@ -55,5 +55,14 @@ public class FlashCardSQLiteHelper extends SQLiteOpenHelper {
         db.insert("CARDSET", null, setValues);
     }
 
+    public static void insertCard(SQLiteDatabase db, int cardsetId, String frontText, String backText) {
+        ContentValues cardValues = new ContentValues();
+        cardValues.put("CARDSETID", cardsetId);
+        cardValues.put("FRONTTEXT", frontText);
+        cardValues.put("BACKTEXT", backText);
+        cardValues.put("CREATEDAT", LocalDateTime.now().toString());
+        cardValues.put("UPDATEDAT", LocalDateTime.now().toString());
+        db.insert("CARD", null, cardValues);
+    }
 
 }

@@ -10,11 +10,26 @@
     <string name="create_set">Create Flash Card Set</string>
     <string name="cancel_set">Cancel</string>
     <string name="ok">OK</string>
+
     <string name="data_unavailable_message">Database unavailable</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="data_empty">Data is empty</string>
+
     <string name="empty_set">This set is empty</string>
     <string name="add">Add</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="support_title">Support</string>
+    <string name="support_use">Use App</string>
+    <string name="support_community">Community</string>
+    <string name="support_privacy">Privacy</string>
+
+    <string name="help_title">Help </string>
+    <string name="help_donate">Donate</string>
+    <string name="help_rate">Rate</string>
+    <string name="help_feedback">Feedback</string>
+
+    <string name="create_card">Create Card</string>
+    <string name="front">Front</string>
+    <string name="back">Back</string>
+
+    <string name="learn_title">Learn</string>
 </resources>
