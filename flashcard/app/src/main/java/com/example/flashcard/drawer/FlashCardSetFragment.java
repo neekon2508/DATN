@@ -1,6 +1,5 @@
 package com.example.flashcard.drawer;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -8,19 +7,25 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.text.Layout;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.AlignmentSpan;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.flashcard.R;
@@ -133,7 +138,74 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
 
             }
         });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> listView, View view, int position, long id) {
+                PopupMenu popup = new PopupMenu(getContext(), view);
+                popup.getMenuInflater().inflate(R.menu.menu_card_set, popup.getMenu());
+                popup.setGravity(Gravity.CENTER);
+                popup.setOnMenuItemClickListener(item -> {
+                    switch(item.getItemId()) {
+                        case R.id.action_add_card:
+                            Intent intent = new Intent(getActivity(), CreateCardActivity.class);
+                            intent.putExtra(CreateCardActivity.EXTRA_CARDSETID, String.valueOf(id));
+                            startActivity(intent);
+                            return true;
+                        case R.id.action_see_all_card:
+                            Toast.makeText(getContext(), "Edit", Toast.LENGTH_SHORT).show();
+                            return true;
+                        case R.id.action_change_name_set:
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
+                            EditText editText = new EditText(getActivity());
+                            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    LinearLayout.LayoutParams.MATCH_PARENT);
+                            editText.setLayoutParams(lp);
+                            editText.setText(((TextView)view).getText().toString());
+                            builder.setTitle(R.string.menu_cardset_change_name)
+                                    .setView(editText)
+                                    .setPositiveButton(R.string.ok,(d,i)->{
+                                        String changeSetName = editText.getText().toString();
+                                        try {
+                                            FlashCardSQLiteHelper.updateCardSet(db, (int)id, changeSetName);
+                                            ((TextView)view).setText(changeSetName);
+                                            Toast.makeText(getContext(), R.string.complete, Toast.LENGTH_SHORT).show();
+                                        } catch (SQLException e) {
+                                            Toast.makeText(getContext(), R.string.data_unavailable_message, Toast.LENGTH_SHORT);
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.cancel_set, (d,i)->{})
+                                    .show();
+                            return true;
+                        case R.id.action_delete_set:
+                            builder = new AlertDialog.Builder(getActivity());
+                            SpannableString title = new SpannableString(getString(R.string.want_to_delete));
+                            title.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER), 0, title.length(), 0);
+                            builder.setTitle(title)
+                                    .setPositiveButton(R.string.ok,(d,i)->{
+                                        try {
+                                            FlashCardSQLiteHelper.deleteCardSet(db, (int)id);
+                                            Fragment fragment = new FlashCardSetFragment();
+                                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                                            ft.add(R.id.content_frame, fragment);
+                                            ft.commit();
+                                            Toast.makeText(getContext(), R.string.complete, Toast.LENGTH_SHORT);
+                                        } catch (SQLException e) {
+                                            Toast.makeText(getContext(), R.string.data_unavailable_message, Toast.LENGTH_SHORT);
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.cancel_set, (d,i)->{})
+                                    .show();
+                            return true;
+                        default:
+                            return false;
+                    }
+                });
+                popup.show();
+                return true;
+            }
+        });
     }
 
 //    @Override

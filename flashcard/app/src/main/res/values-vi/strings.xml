@@ -34,5 +34,17 @@
     <string name="back">Mặt sau</string>
 
     <string name="learn_title">Học Bài</string>
+    <string name="Check">Kiểm Tra</string>
+    <string name="button_previous">Quay Lại</string>
+    <string name="button_next">Tiếp</string>
+
+    <string name="menu_cardset_add_card">Thêm Thẻ</string>
+    <string name="menu_cardset_see_all_card">Xem Tất Cả Thẻ</string>
+    <string name="menu_cardset_change_name">Đổi Tên Bộ Thẻ</string>
+    <string name="complete">Hoàn Thành</string>
+    <string name="menu_cardset_delete_set">Xóa Bộ Thẻ</string>
+    <string name="delete_set_completed">Bộ Thẻ Đã Xóa</string>
+    <string name="restore">Hoàn Tác</string>
+    <string name="want_to_delete">Bạn Có Muốn Xóa?</string>
 
 </resources>

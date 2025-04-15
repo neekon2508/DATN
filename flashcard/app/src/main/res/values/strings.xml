@@ -32,6 +32,16 @@
     <string name="back">Back</string>
 
     <string name="learn_title">Learn</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Check">Check</string>
+    <string name="button_previous">Previous</string>
+    <string name="button_next">Next</string>
+
+    <string name="menu_cardset_add_card">Add Flash Card</string>
+    <string name="menu_cardset_see_all_card">See All Flash Card</string>
+    <string name="menu_cardset_change_name">Change The Name Of Set</string>
+    <string name="complete">Complete</string>
+    <string name="menu_cardset_delete_set">Delete The Set</string>
+    <string name="delete_set_completed">The Set was deleted</string>
+    <string name="restore">Restore</string>
+    <string name="want_to_delete">Do You Want To Delete?</string>
 </resources>

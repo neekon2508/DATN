@@ -45,7 +45,10 @@ public class LearnActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        Bundle bundle = new Bundle();
+        bundle.putInt("cardsetId", CARDSETID);
         Fragment fragment = new LearnFragment();
+        fragment.setArguments(bundle);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.content_frame, fragment);
         ft.commit();

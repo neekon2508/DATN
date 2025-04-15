@@ -5,13 +5,15 @@ import java.time.LocalDateTime;
 
 public class Card {
 
+    private int id;
     private String frontText;
     private String backText;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public Card(String frontText, String backText) {
+    public Card(int id, String frontText, String backText) {
 
+        this.id = id;
         this.frontText = frontText;
         this.backText = backText;
         createdAt = LocalDateTime.now();
@@ -22,7 +24,7 @@ public class Card {
         return frontText;
     }
 
-    public String getBehindText() {
+    public String getBackText() {
         return backText;
     }
 

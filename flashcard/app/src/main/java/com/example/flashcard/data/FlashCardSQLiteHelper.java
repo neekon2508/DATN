@@ -65,4 +65,22 @@ public class FlashCardSQLiteHelper extends SQLiteOpenHelper {
         db.insert("CARD", null, cardValues);
     }
 
+    public static void updateCardSet(SQLiteDatabase db, int id, String name) {
+        ContentValues setValues = new ContentValues();
+        setValues.put("NAME", name);
+        db.update("CARDSET", setValues,"_id=?", new String[] {String.valueOf(id)});
+    }
+    public static void deleteCardSet(SQLiteDatabase db, int id) {
+        db.delete("CARDSET", "_id=?", new String[] {String.valueOf(id)});
+        db.close();
+    }
+    public static void restoreCardSet(SQLiteDatabase db, int id, String name) {
+        ContentValues setValues = new ContentValues();
+        setValues.put("_id",id);
+        setValues.put("NAME", name);
+        setValues.put("CREATEDAT", LocalDateTime.now().toString());
+        setValues.put("UPDATEDAT", LocalDateTime.now().toString());
+        db.insert("CARDSET", null, setValues);
+        db.close();
+    }
 }
