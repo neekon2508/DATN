@@ -1,6 +1,10 @@
 package com.example.flashcard.method;
 
+import android.content.Intent;
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -9,15 +13,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.example.flashcard.R;
-import com.example.flashcard.data.FlashCardSQLiteHelper;
 import com.example.flashcard.drawer.FlashCardSetFragment;
 import com.example.flashcard.drawer.HelpFragment;
 import com.example.flashcard.drawer.SettingFragment;
@@ -25,7 +27,8 @@ import com.example.flashcard.drawer.StatisticFragment;
 import com.example.flashcard.drawer.SupportFragment;
 import com.google.android.material.navigation.NavigationView;
 
-public class LearnActivity extends AppCompatActivity
+
+public class ListCardActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     public static final String EXTRA_CARDSETID = "cardsetId";
@@ -41,6 +44,8 @@ public class LearnActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.nav_open_drawer, R.string.nav_close_drawer);
@@ -49,9 +54,10 @@ public class LearnActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
         Bundle bundle = new Bundle();
         bundle.putInt("cardsetId", CARDSETID);
-        Fragment fragment = new LearnFragment();
+        ListCardFragment fragment = new ListCardFragment();
         fragment.setArguments(bundle);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.content_frame, fragment);
@@ -59,13 +65,9 @@ public class LearnActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_more_vert:
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+    public boolean onCreateOptionsMenu (Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_list_card, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -111,4 +113,5 @@ public class LearnActivity extends AppCompatActivity
         else
             super.onBackPressed();
     }
+
 }

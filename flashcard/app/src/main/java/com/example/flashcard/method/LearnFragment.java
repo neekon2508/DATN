@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +46,13 @@ public class LearnFragment extends Fragment {
         if (getArguments() != null) {
             cardsetId = getArguments().getInt("cardsetId", 0);
         }
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            cardsetId = bundle.getInt("cardsetId", 0);
+            cardIndex = bundle.getInt("cardIndex", 0);
+        }
+
 
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_learn, container, false);
@@ -117,14 +125,37 @@ public class LearnFragment extends Fragment {
         frontText.setText(cards[cardIndex].getFrontText());
         backText.setText(cards[cardIndex].getBackText());
 
+        Bundle bundle = new Bundle();
+        bundle.putInt("cardsetId", cardsetId);
+
+        LearnFragment fragment = new LearnFragment();
+
+
+
         Button buttonPrevious = (Button) layout.findViewById(R.id.button_previous);
         Button buttonNext = (Button) layout.findViewById(R.id.button_next);
         buttonPrevious.setOnClickListener(l-> {
-            if(cardIndex > 1) cardIndex--;
+            if(cardIndex > 0)
+                {
+                    cardIndex--;
+                    bundle.putInt("cardIndex", cardIndex);
+                    fragment.setArguments(bundle);
+                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.content_frame, fragment);
+                    ft.commit();
+                }
             else Toast.makeText(getContext(),R.string.data_unavailable_message, Toast.LENGTH_SHORT).show();
         });
         buttonNext.setOnClickListener(l->{
-            if(cardIndex < cards.length) cardIndex++;
+            if(cardIndex < cards.length-1)
+            {
+                cardIndex++;
+                bundle.putInt("cardIndex", cardIndex);
+                fragment.setArguments(bundle);
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame, fragment);
+                ft.commit();
+            }
             else Toast.makeText(getContext(),R.string.data_unavailable_message, Toast.LENGTH_SHORT).show();
         });
     }

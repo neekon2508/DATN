@@ -54,7 +54,11 @@ public class CreateCardActivity extends AppCompatActivity {
                          SQLiteDatabase db = flashCardSQLiteHelper.getWritableDatabase()) {
 
                         if(CARDSETID != 0)
+                        {
                             FlashCardSQLiteHelper.insertCard(db, CARDSETID, frontText, backText);
+                            Toast.makeText(this, R.string.complete, Toast.LENGTH_SHORT).show();
+
+                        }
                         else
                             Toast.makeText(this, R.string.data_unavailable_message, Toast.LENGTH_SHORT).show();
 

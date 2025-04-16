@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.text.Layout;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.AlignmentSpan;
 import android.view.Gravity;
@@ -33,6 +32,7 @@ import com.example.flashcard.data.FlashCardSQLiteHelper;
 
 import com.example.flashcard.method.CreateCardActivity;
 import com.example.flashcard.method.LearnActivity;
+import com.example.flashcard.method.ListCardActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -142,7 +142,7 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
             @Override
             public boolean onItemLongClick(AdapterView<?> listView, View view, int position, long id) {
                 PopupMenu popup = new PopupMenu(getContext(), view);
-                popup.getMenuInflater().inflate(R.menu.menu_card_set, popup.getMenu());
+                popup.getMenuInflater().inflate(R.menu.menu_card_set_popup, popup.getMenu());
                 popup.setGravity(Gravity.CENTER);
                 popup.setOnMenuItemClickListener(item -> {
                     switch(item.getItemId()) {
@@ -152,7 +152,29 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
                             startActivity(intent);
                             return true;
                         case R.id.action_see_all_card:
-                            Toast.makeText(getContext(), "Edit", Toast.LENGTH_SHORT).show();
+                            try (FlashCardSQLiteHelper flashCardSQLiteHelper = new FlashCardSQLiteHelper(getContext());
+                                 SQLiteDatabase db = flashCardSQLiteHelper.getReadableDatabase();
+                                 Cursor cardsCursor = db.query("CARD", new String[] {"_id"},
+                                         "CARDSETID=?", new String[] {Integer.toString((int)id)}, null, null, null);)
+                            {
+                                if (cardsCursor.moveToFirst()) {
+                                    intent = new Intent(getActivity(), ListCardActivity.class);
+                                    intent.putExtra(CreateCardActivity.EXTRA_CARDSETID, String.valueOf(id));
+                                    startActivity(intent);
+                                }
+                                else {
+                                    Snackbar snackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), R.string.empty_set, Snackbar.LENGTH_LONG);
+                                    snackbar.setAction(R.string.add, t -> {
+                                        Intent createIntent = new Intent(getActivity(), CreateCardActivity.class);
+                                        createIntent.putExtra(CreateCardActivity.EXTRA_CARDSETID, String.valueOf(id));
+                                        startActivity(createIntent);
+                                    });
+                                    snackbar.show();
+                                }
+
+                            } catch (SQLException e) {
+                                Toast.makeText(getContext(),R.string.data_unavailable_message, Toast.LENGTH_SHORT);
+                            }
                             return true;
                         case R.id.action_change_name_set:
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
