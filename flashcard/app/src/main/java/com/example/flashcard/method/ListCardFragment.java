@@ -54,27 +54,6 @@ public class ListCardFragment extends Fragment {
         return layout;
     }
 
-//    private void setupCardArray(View view) {
-//
-//        try {
-//            FlashCardSQLiteHelper flashCardSQLiteHelper = new FlashCardSQLiteHelper(getContext());
-//            db = flashCardSQLiteHelper.getReadableDatabase();
-//            cardsCursor = db.query("CARD", new String[] {"_id", "FRONTTEXT","BACKTEXT"},
-//                    "CARDSETID=?", new String[] {Integer.toString((int)cardsetId)}, null, null, null);
-//            if( cardsCursor != null && cardsCursor.moveToFirst()) {
-//                cards = new Card[cardsCursor.getCount()];
-//                for(int i =0; i< cards.length; ++i) {
-//                    cards[i] = new Card(cardsCursor.getInt(0),
-//                            cardsCursor.getString(1),
-//                            cardsCursor.getString(2));
-//                    cardsCursor.moveToNext();
-//                }
-//            }
-//        } catch (SQLException e) {
-//            Toast.makeText(getContext(), R.string.data_unavailable_message, Toast.LENGTH_SHORT).show();
-//        }
-//    }
-
     private void setupListView(View view) {
         //Populate the list_set ListView from a cursor
         ListView listView = view.findViewById(R.id.list_cards);
@@ -97,6 +76,10 @@ public class ListCardFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
+                Intent intent = new Intent(getActivity(), UpdateCardActivity.class);
+                intent.putExtra( UpdateCardActivity.EXTRA_CARDID, String.valueOf(id));
+                intent.putExtra(UpdateCardActivity.EXTRA_CARDSETID, String.valueOf(cardsetId));
+                startActivity(intent);
             }
         });
 
@@ -107,4 +90,5 @@ public class ListCardFragment extends Fragment {
             }
         });
     }
+
 }

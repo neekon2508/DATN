@@ -47,4 +47,6 @@
     <string name="restore">Hoàn Tác</string>
     <string name="want_to_delete">Bạn Có Muốn Xóa?</string>
 
+    <string name="label_update_card">Cập Nhật Thẻ</string>
+
 </resources>
