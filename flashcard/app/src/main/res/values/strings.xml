@@ -46,4 +46,7 @@
     <string name="want_to_delete">Do You Want To Delete?</string>
 
     <string name="label_update_card">Update Flash Card</string>
+
+    <string name="language">Language</string>
+    <string name="notification">Notification</string>
 </resources>

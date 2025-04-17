@@ -50,6 +50,12 @@ public class UpdateCardActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = new Intent(this, ListCardActivity.class);
+                intent.putExtra(ListCardActivity.EXTRA_CARDSETID, String.valueOf(CARDSETID));
+                finish();
+                startActivity(intent);
+
             case R.id.action_more_vert:
                 return true;
             case R.id.action_create_card:
@@ -61,7 +67,7 @@ public class UpdateCardActivity extends AppCompatActivity {
                     try (FlashCardSQLiteHelper flashCardSQLiteHelper = new FlashCardSQLiteHelper(this);
                          SQLiteDatabase db = flashCardSQLiteHelper.getWritableDatabase()) {
                         FlashCardSQLiteHelper.updateCard(db, CARDID, frontText, backText);
-                        Intent intent = new Intent(this, ListCardActivity.class);
+                        intent = new Intent(this, ListCardActivity.class);
                         intent.putExtra(ListCardActivity.EXTRA_CARDSETID, String.valueOf(CARDSETID));
                         startActivity(intent);
                         }

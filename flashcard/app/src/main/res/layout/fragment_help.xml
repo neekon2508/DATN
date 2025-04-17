@@ -4,29 +4,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp"
+    android:layout_marginTop="50dp"
+    android:layout_marginBottom="50dp"
     android:orientation="vertical"
     android:layout_gravity="center"
+
+    android:background="@drawable/round_back_yellow"
     tools:context=".drawer.HelpFragment">
 
     <TextView
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:textAlignment="center"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="32sp"
-        android:text="@string/support_title" />
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textColor="@color/black"
+        android:text="@string/help_title" />
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/support_use"/>
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:layout_margin="10dp"
+        android:text="@string/support_use"
+        android:background="@drawable/textview_border" />
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/support_community"/>
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:text="@string/support_community"
+        android:background="@drawable/textview_border" />
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/support_privacy"/>
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:text="@string/support_privacy"
+        android:background="@drawable/textview_border" />
 
 </LinearLayout>

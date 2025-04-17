@@ -10,17 +10,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.flashcard.R;
-import com.example.flashcard.data.FlashCardSQLiteHelper;
 import com.example.flashcard.drawer.FlashCardSetFragment;
 import com.example.flashcard.drawer.HelpFragment;
-import com.example.flashcard.drawer.SettingFragment;
+import com.example.flashcard.drawer.SettingActivity;
 import com.example.flashcard.drawer.StatisticFragment;
 import com.example.flashcard.drawer.SupportFragment;
 import com.google.android.material.navigation.NavigationView;
@@ -72,6 +68,7 @@ public class LearnActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         Fragment fragment = null;
+        Intent intent = null;
 
         switch (id) {
             case R.id.nav_cardSet:
@@ -81,7 +78,7 @@ public class LearnActivity extends AppCompatActivity
                 fragment = new StatisticFragment();
                 break;
             case R.id.nav_setting:
-                fragment = new SettingFragment();
+                intent = new Intent(this, SettingActivity.class);
                 break;
             case R.id.nav_help:
                 fragment = new HelpFragment();
@@ -96,8 +93,8 @@ public class LearnActivity extends AppCompatActivity
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.content_frame, fragment);
             ft.commit();
-        }
-
+        } else
+            startActivity(intent);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

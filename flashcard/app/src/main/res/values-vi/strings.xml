@@ -49,4 +49,7 @@
 
     <string name="label_update_card">Cập Nhật Thẻ</string>
 
+    <string name="language">Ngôn Ngữ</string>
+    <string name="notification">Thông Báo</string>
+
 </resources>

@@ -31,6 +31,7 @@ public class FlashCardSQLiteHelper extends SQLiteOpenHelper {
 
     private void updateMyDatabase(SQLiteDatabase db, int oldversion, int newversion) {
         if (oldversion < 1) {
+            db.execSQL("PRAGMA foreign_keys = ON;");
             db.execSQL(" CREATE TABLE CARDSET ( " +
                     "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "NAME TEXT NOT NULL, " +
@@ -43,8 +44,13 @@ public class FlashCardSQLiteHelper extends SQLiteOpenHelper {
                     "CREATEDAT TEXT NOT NULL, " +
                     "UPDATEDAT TEXT NOT NULL, " +
                     "CARDSETID INTEGER NOT NULL, " +
-                    "FOREIGN KEY (CARDSETID) REFERENCES CardSet(id) ON DELETE CASCADE);");
+                    "FOREIGN KEY (CARDSETID) REFERENCES CARDSET(_id) ON DELETE CASCADE);");
         }
+    }
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        db.execSQL("PRAGMA foreign_keys = ON;");
     }
 
     public static void insertCardSet(SQLiteDatabase db, String name) {

@@ -210,7 +210,7 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
                                             FlashCardSQLiteHelper.deleteCardSet(db, (int)id);
                                             Fragment fragment = new FlashCardSetFragment();
                                             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                                            ft.add(R.id.content_frame, fragment);
+                                            ft.replace(R.id.content_frame, fragment);
                                             ft.commit();
                                             Toast.makeText(getContext(), R.string.complete, Toast.LENGTH_SHORT);
                                         } catch (SQLException e) {

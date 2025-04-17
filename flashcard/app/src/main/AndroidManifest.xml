@@ -12,10 +12,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="31">
+
+        <activity
+            android:name=".drawer.SettingActivity"
+            android:exported="false"
+            android:label="@string/setting"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".method.UpdateCardActivity"
             android:exported="false"
-            android:label="">
+            android:parentActivityName=".method.ListCardActivity"
+            android:label="@string/label_update_card">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

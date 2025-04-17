@@ -68,6 +68,7 @@ public class CreateCardActivity extends AppCompatActivity {
                 }
                 else
                     Toast.makeText(this,R.string.data_empty, Toast.LENGTH_SHORT);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
