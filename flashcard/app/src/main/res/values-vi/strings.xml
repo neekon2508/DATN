@@ -51,5 +51,8 @@
 
     <string name="language">Ngôn Ngữ</string>
     <string name="notification">Thông Báo</string>
-
+    <string name="appearance">Giao Diện</string>
+    <string name="about">Về Sản Phẩm</string>
+    <string name="theme">Chủ Đề</string>
+    <string name="background">Hình Nền</string>
 </resources>

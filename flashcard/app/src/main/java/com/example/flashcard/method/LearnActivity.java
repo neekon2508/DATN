@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.flashcard.R;
+import com.example.flashcard.data.ThemeManager;
 import com.example.flashcard.drawer.FlashCardSetFragment;
 import com.example.flashcard.drawer.HelpFragment;
 import com.example.flashcard.drawer.SettingActivity;
@@ -29,6 +30,7 @@ public class LearnActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager.setTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learn);
 

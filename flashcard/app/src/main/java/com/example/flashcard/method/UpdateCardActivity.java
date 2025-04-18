@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.flashcard.R;
 import com.example.flashcard.data.FlashCardSQLiteHelper;
+import com.example.flashcard.data.ThemeManager;
 
 public class UpdateCardActivity extends AppCompatActivity {
 
@@ -29,6 +30,7 @@ public class UpdateCardActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager.setTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_card);
 

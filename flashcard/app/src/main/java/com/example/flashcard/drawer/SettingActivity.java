@@ -27,8 +27,10 @@ import com.example.flashcard.MainActivity;
 import com.example.flashcard.R;
 import com.example.flashcard.data.FlashCardSQLiteHelper;
 import com.example.flashcard.data.LocaleHelper;
+import com.example.flashcard.data.ThemeManager;
 import com.example.flashcard.method.CreateCardActivity;
 import com.example.flashcard.method.ListCardActivity;
+import com.example.flashcard.setting.AppearanceActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Locale;
@@ -37,6 +39,7 @@ public class SettingActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager.setTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
@@ -53,14 +56,17 @@ public class SettingActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.setting_list_view);
         String[] setting_items = {
                 getResources().getString(R.string.language),
-                getResources().getString(R.string.notification)
+                getResources().getString(R.string.notification),
+                getResources().getString(R.string.appearance),
+                getResources().getString(R.string.about)
         };
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, setting_items);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener((adapterView, v, position, id) -> {
-            if (position == 0) {
+            switch (position) {
+                case 0:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 LayoutInflater inflater = getLayoutInflater();
                 View view = inflater.inflate(R.layout.popup_language, null);
@@ -72,7 +78,6 @@ public class SettingActivity extends AppCompatActivity {
                 String defaultLanguage = LocaleHelper.language;
                 radioGroup.check(getResources()
                         .getIdentifier(defaultLanguage, "id", getPackageName()));
-                int selectedId = radioGroup.getCheckedRadioButtonId();
                 radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
                         String landcode = getResources().getResourceEntryName(checkedId);
                         LocaleHelper.setAppLocale(this, landcode);
@@ -80,6 +85,13 @@ public class SettingActivity extends AppCompatActivity {
                 finish();
                 startActivity(intent);
                 });
+                break;
+                case 1:
+                    break;
+                case 2:
+                    Intent intent = new Intent(this, AppearanceActivity.class);
+                    startActivity(intent);
+                    break;
             }
         });
     }

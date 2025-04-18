@@ -47,6 +47,16 @@ public class FlashCardSQLiteHelper extends SQLiteOpenHelper {
                     "UPDATEDAT TEXT NOT NULL, " +
                     "CARDSETID INTEGER NOT NULL, " +
                     "FOREIGN KEY (CARDSETID) REFERENCES CARDSET(_id) ON DELETE CASCADE);");
+            db.execSQL("CREATE TABLE SETTING (" +
+                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "LANGUAGE TEXT NOT NULL," +
+                    "THEME TEXT NOT NULL);");
+
+            //Create SETTING DEFAULT VALUES
+            ContentValues settingValues = new ContentValues();
+            settingValues.put("LANGUAGE", "en");
+            settingValues.put("THEME", "LightTheme");
+            db.insert("SETTING",null, settingValues);
         }
     }
     @Override
@@ -86,6 +96,13 @@ public class FlashCardSQLiteHelper extends SQLiteOpenHelper {
         cardValues.put("BACKTEXT", backText);
         cardValues.put("UPDATEDAT", LocalDateTime.now().toString());
         db.update("CARD", cardValues, "_id=?", new String[] {String.valueOf(id)});
+    }
+
+    public static void updateTheme(SQLiteDatabase db, String theme) {
+        ContentValues themeValues = new ContentValues();
+        themeValues.put("THEME", theme);
+        db.update("SETTING",themeValues,"_id=?",new String[] {String.valueOf(1)});
+        db.close();
     }
     public static void deleteCardSet(SQLiteDatabase db, int id) {
         db.delete("CARDSET", "_id=?", new String[] {String.valueOf(id)});

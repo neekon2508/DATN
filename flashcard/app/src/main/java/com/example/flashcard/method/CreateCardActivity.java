@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.flashcard.R;
 import com.example.flashcard.data.FlashCardSQLiteHelper;
+import com.example.flashcard.data.ThemeManager;
 
 public class CreateCardActivity extends AppCompatActivity {
 
@@ -22,6 +23,7 @@ public class CreateCardActivity extends AppCompatActivity {
     public static int CARDSETID = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager.setTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_card);
         Intent intent = getIntent();

@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.example.flashcard.R;
 import com.example.flashcard.data.FlashCardSQLiteHelper;
 
+import com.example.flashcard.data.ThemeManager;
 import com.example.flashcard.method.CreateCardActivity;
 import com.example.flashcard.method.LearnActivity;
 import com.example.flashcard.method.ListCardActivity;
@@ -45,9 +46,11 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ThemeManager.setTheme(getContext());
         firstVisit = true;
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_flash_card_set, container, false);
+
         FloatingActionButton createSet = layout.findViewById(R.id.createSet);
         createSet.setOnClickListener(this);
         setupListView(layout);
