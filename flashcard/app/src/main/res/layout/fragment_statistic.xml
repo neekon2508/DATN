@@ -7,9 +7,12 @@
     android:orientation="vertical"
     tools:context=".drawer.StatisticFragment">
 
-    <TextView
+
+    <com.anychart.AnyChartView
+        android:background="@drawable/round_back_yellow"
+        android:id="@+id/any_chart_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Statistic" />
+        android:layout_marginTop="20dp" />
 
 </LinearLayout>

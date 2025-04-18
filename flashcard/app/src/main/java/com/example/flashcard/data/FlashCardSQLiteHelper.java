@@ -41,6 +41,8 @@ public class FlashCardSQLiteHelper extends SQLiteOpenHelper {
                     "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "FRONTTEXT TEXT NOT NULL, " +
                     "BACKTEXT TEXT NOT NULL, " +
+                    "ISLEARNED INTEGER, "+
+                    "LEARNEDCOUNT INTEGER, "+
                     "CREATEDAT TEXT NOT NULL, " +
                     "UPDATEDAT TEXT NOT NULL, " +
                     "CARDSETID INTEGER NOT NULL, " +
@@ -66,6 +68,8 @@ public class FlashCardSQLiteHelper extends SQLiteOpenHelper {
         cardValues.put("CARDSETID", cardsetId);
         cardValues.put("FRONTTEXT", frontText);
         cardValues.put("BACKTEXT", backText);
+        cardValues.put("ISLEARNED", 0);
+        cardValues.put("LEARNEDCOUNT", 0);
         cardValues.put("CREATEDAT", LocalDateTime.now().toString());
         cardValues.put("UPDATEDAT", LocalDateTime.now().toString());
         db.insert("CARD", null, cardValues);
@@ -87,13 +91,6 @@ public class FlashCardSQLiteHelper extends SQLiteOpenHelper {
         db.delete("CARDSET", "_id=?", new String[] {String.valueOf(id)});
         db.close();
     }
-    public static void restoreCardSet(SQLiteDatabase db, int id, String name) {
-        ContentValues setValues = new ContentValues();
-        setValues.put("_id",id);
-        setValues.put("NAME", name);
-        setValues.put("CREATEDAT", LocalDateTime.now().toString());
-        setValues.put("UPDATEDAT", LocalDateTime.now().toString());
-        db.insert("CARDSET", null, setValues);
-        db.close();
-    }
+
+
 }

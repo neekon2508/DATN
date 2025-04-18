@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.example.flashcard.MainActivity;
 import com.example.flashcard.R;
 import com.example.flashcard.data.FlashCardSQLiteHelper;
+import com.example.flashcard.data.LocaleHelper;
 import com.example.flashcard.method.CreateCardActivity;
 import com.example.flashcard.method.ListCardActivity;
 import com.google.android.material.snackbar.Snackbar;
@@ -44,6 +45,8 @@ public class SettingActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         setupListView();
+
+
     }
     private void setupListView() {
 
@@ -66,27 +69,21 @@ public class SettingActivity extends AppCompatActivity {
                 AlertDialog dialog = builder.create();
                 dialog.show();
                 RadioGroup radioGroup = view.findViewById(R.id.radio_language);
-                Locale defaultLocale = Locale.getDefault();
-                String defaultLanguage = defaultLocale.getLanguage();
+                String defaultLanguage = LocaleHelper.language;
                 radioGroup.check(getResources()
                         .getIdentifier(defaultLanguage, "id", getPackageName()));
+                int selectedId = radioGroup.getCheckedRadioButtonId();
                 radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-                    String landcode = getResources().getResourceEntryName(checkedId);
-                    setLocal(landcode);
+                        String landcode = getResources().getResourceEntryName(checkedId);
+                        LocaleHelper.setAppLocale(this, landcode);
+                Intent intent = new Intent(this, SettingActivity.class);
+                finish();
+                startActivity(intent);
                 });
             }
         });
     }
 
-    private void setLocal(String landcode) {
-        Locale locale = new Locale(landcode);
-        Locale.setDefault(locale);
-        Resources resources = getResources();
-        Configuration config = resources.getConfiguration();
-        config.setLocale(locale);
-        resources.updateConfiguration(config, getResources().getDisplayMetrics());
-        finish();
-        startActivity(getIntent());
-    }
+
 
 }
