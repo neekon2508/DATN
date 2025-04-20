@@ -9,10 +9,19 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
+import com.example.flashcard.data.BackgroundManager;
+import com.example.flashcard.data.FlashCardSQLiteHelper;
 import com.example.flashcard.data.ThemeManager;
 import com.example.flashcard.drawer.FlashCardSetFragment;
 import com.example.flashcard.drawer.HelpFragment;
@@ -20,6 +29,8 @@ import com.example.flashcard.drawer.SettingActivity;
 import com.example.flashcard.drawer.StatisticFragment;
 import com.example.flashcard.drawer.SupportFragment;
 import com.google.android.material.navigation.NavigationView;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
@@ -38,6 +49,8 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        BackgroundManager.setDefaultBackground(this, navigationView);
+
 
         Fragment fragment = new FlashCardSetFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

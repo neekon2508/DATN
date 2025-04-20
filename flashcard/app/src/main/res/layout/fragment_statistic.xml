@@ -7,12 +7,32 @@
     android:orientation="vertical"
     tools:context=".drawer.StatisticFragment">
 
-
-    <com.anychart.AnyChartView
-        android:background="@drawable/round_back_yellow"
-        android:id="@+id/any_chart_view"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="20dp" />
+        android:fillViewport="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/learned_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:layout_marginBottom="20dp"/>
+
+            <com.anychart.AnyChartView
+
+                android:id="@+id/any_chart_view"
+                android:layout_width="match_parent"
+                android:layout_height="300dp" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
 
 </LinearLayout>

@@ -63,14 +63,12 @@ public class CreateCardActivity extends AppCompatActivity {
                         }
                         else
                             Toast.makeText(this, R.string.data_unavailable_message, Toast.LENGTH_SHORT).show();
-
                         editFrontText.setText("");
                         editBackText.setText("");
                     }
                 }
                 else
                     Toast.makeText(this,R.string.data_empty, Toast.LENGTH_SHORT);
-                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

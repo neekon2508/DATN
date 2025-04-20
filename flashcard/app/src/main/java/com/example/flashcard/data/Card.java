@@ -19,6 +19,7 @@ public class Card {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
+    public int getId() {return id;}
 
     public String getFrontText() {
         return frontText;

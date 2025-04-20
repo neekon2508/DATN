@@ -38,7 +38,7 @@ public class LearnFragment extends Fragment {
     private static Card[] cards;
     private SQLiteDatabase db;
     private Cursor cardsCursor;
-
+    private boolean firstCheck = false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -64,11 +64,6 @@ public class LearnFragment extends Fragment {
         return layout;
     }
 
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//    }
     private void setupAnimator(View layout) {
         float scale = layout.getContext().getResources().getDisplayMetrics().density;
         TextView card_front = (TextView) layout.findViewById(R.id.front_text);
@@ -93,6 +88,14 @@ public class LearnFragment extends Fragment {
                 back_anim.start();
                 front_anim.start();
                 isFront = true;
+            }
+            try(FlashCardSQLiteHelper flashCardSQLiteHelper = new FlashCardSQLiteHelper(getContext());
+                SQLiteDatabase db = flashCardSQLiteHelper.getReadableDatabase()) {
+                if (!firstCheck) {
+                    FlashCardSQLiteHelper.updateCardByLearned(db, cards[cardIndex].getId(), 1);
+                    firstCheck = true;
+                }
+                FlashCardSQLiteHelper.updateCardByLearnedAt(db, cardIndex);
             }
         });
     }

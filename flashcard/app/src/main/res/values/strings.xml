@@ -53,4 +53,9 @@
     <string name="about">About</string>
     <string name="theme">Theme</string>
     <string name="background">Background</string>
+
+    <string name="learned">Learned</string>
+    <string name="not_learned">Not Learned</string>
+    <string name="words">Words</string>
+
 </resources>

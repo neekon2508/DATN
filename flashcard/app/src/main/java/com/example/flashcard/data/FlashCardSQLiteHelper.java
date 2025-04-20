@@ -45,6 +45,7 @@ public class FlashCardSQLiteHelper extends SQLiteOpenHelper {
                     "LEARNEDCOUNT INTEGER, "+
                     "CREATEDAT TEXT NOT NULL, " +
                     "UPDATEDAT TEXT NOT NULL, " +
+                    "LEARNEDAT TEXT, "+
                     "CARDSETID INTEGER NOT NULL, " +
                     "FOREIGN KEY (CARDSETID) REFERENCES CARDSET(_id) ON DELETE CASCADE);");
             db.execSQL("CREATE TABLE SETTING (" +
@@ -98,6 +99,16 @@ public class FlashCardSQLiteHelper extends SQLiteOpenHelper {
         db.update("CARD", cardValues, "_id=?", new String[] {String.valueOf(id)});
     }
 
+    public static void updateCardByLearned(SQLiteDatabase db, int id, int learned) {
+        ContentValues cardsValue = new ContentValues();
+        cardsValue.put("ISLEARNED", 1);
+        db.update("CARD", cardsValue, "_id=?", new String[] {String.valueOf(id)});
+    }
+    public static void updateCardByLearnedAt(SQLiteDatabase db, int id) {
+        ContentValues cardValue = new ContentValues();
+        cardValue.put("LEARNEDAT", LocalDateTime.now().toString());
+        db.update("CARD", cardValue, "_id=?", new String[] {String.valueOf(id)});
+    }
     public static void updateTheme(SQLiteDatabase db, String theme) {
         ContentValues themeValues = new ContentValues();
         themeValues.put("THEME", theme);

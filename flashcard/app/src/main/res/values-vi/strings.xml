@@ -55,4 +55,9 @@
     <string name="about">Về Sản Phẩm</string>
     <string name="theme">Chủ Đề</string>
     <string name="background">Hình Nền</string>
+
+    <string name="learned">Đã Học</string>
+    <string name="not_learned">Chưa Học</string>
+    <string name="words">Từ</string>
+
 </resources>

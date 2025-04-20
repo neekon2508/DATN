@@ -32,4 +32,5 @@ public abstract class ThemeManager {
             FlashCardSQLiteHelper.updateTheme(db, newTheme);
         }
     }
+
 }
