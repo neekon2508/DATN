@@ -25,6 +25,7 @@ import com.example.flashcard.data.FlashCardSQLiteHelper;
 import com.example.flashcard.data.ThemeManager;
 import com.example.flashcard.drawer.FlashCardSetFragment;
 import com.example.flashcard.drawer.HelpFragment;
+import com.example.flashcard.drawer.LogInActivity;
 import com.example.flashcard.drawer.SettingActivity;
 import com.example.flashcard.drawer.StatisticFragment;
 import com.example.flashcard.drawer.SupportFragment;
@@ -80,6 +81,9 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_support:
                 fragment = new SupportFragment();
                 break;
+            case R.id.nav_log_in:
+                intent = new Intent(this, LogInActivity.class);
+                startActivity(intent);
             default:
                 fragment = new FlashCardSetFragment();
         }

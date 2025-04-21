@@ -58,4 +58,9 @@
     <string name="not_learned">Not Learned</string>
     <string name="words">Words</string>
 
+    <string name="log_in">Log In</string>
+    <string name="user_name">User Name</string>
+    <string name="user_password">User Password</string>
+    <string name="dont_have_account">Dont Have Account?</string>
+    <string name="sign_up">Sign Up</string>
 </resources>

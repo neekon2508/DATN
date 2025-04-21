@@ -59,5 +59,10 @@
     <string name="learned">Đã Học</string>
     <string name="not_learned">Chưa Học</string>
     <string name="words">Từ</string>
+    <string name="log_in">Đăng Nhập</string>
+    <string name="user_name">Tên</string>
+    <string name="user_password">Mật Khẩu</string>
+    <string name="dont_have_account">Không Có Tài Khoản?</string>
+    <string name="sign_up">Đăng Ký</string>
 
 </resources>

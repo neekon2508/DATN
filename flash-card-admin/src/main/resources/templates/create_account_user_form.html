@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http:/ /www.w3.org/1999/xhtml" 
+     xmlns:th="http:/ /www.thymeleaf.org">
+ <head>
+   <title>Create New Account</title>
+   <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+	 <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>  
+ </head>
+ <body class="p-3 mb-2 bg-body-secondary">
+   <h1>Create New Account</h1>
+
+   <form method="POST" th:action="@{/create_account_user}" id="form">
+
+    <table style="margin:auto;border-collapse: separate;border-spacing: 10px;">
+    <tr>
+    <td>
+    <label for="username">Username</label>
+    </td>
+    <td>
+    <input type="text" name="username"/>
+    </td>
+    </tr>
+    <tr>
+      <td>
+    <label for="password">Password</label>
+  </td>
+  <td>
+    <input type="password" name="password"/>
+  </td>
+  </tr>
+  <tr>
+    <td>
+    <label for="confirm">Confirm password</label>
+  </td>
+  <td>  
+  <input type="password" name="confirm"/>
+</td>
+  </tr>
+  
+  </table>
+<div  style="display:flex;justify-content:center;">
+  <input type="submit" value="Register" class="btn btn-success" />
+</div>
+   </form>
+</body>
+</html>
