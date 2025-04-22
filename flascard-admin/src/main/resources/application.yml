@@ -1,0 +1,10 @@
+spring:
+ datasource:
+   url: jdbc:mysql://mysql-26a06367-neekon250803.j.aivencloud.com:12350/flashcard?sslmode=require
+   username: avnadmin
+   password: 
+server:
+  port: 8080
+app:
+  cors:
+    origins: http://localhost:8080

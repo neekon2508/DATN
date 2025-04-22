@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http:/ /www.w3.org/1999/xhtml"
+     xmlns:th="http:/ /www.thymeleaf.org">
+ <head>
+   <title>Login</title>
+   <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+	 <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>  
+
+ </head>
+ 
+ <body class="p-3 mb-2 bg-body-secondary" >
+  <div class="container text-center w-25" >
+    <form method="POST" th:action="@{/login}" id="loginForm" style="margin-top: 40%;">
+      <div class="form-group">
+        <label for="username">Username: </label>
+        <input type="text" class="form-control" name="username" id="username" aria-describedby="emailHelp" placeholder="Enter user">
+      </div>
+      <div class="form-group">
+        <label for="password">Password: </label>
+        <input type="password" name="password" id="password" class="form-control" placeholder="Password">
+      </div>
+      <br>
+      <input type="submit" value="Login" class="btn btn-primary"/>
+    </form>
+
+  </div>
+
+   <div th:if="${error}">
+     Unable to login. Check your username and password.
+   </div>
+   
+  
+   
+ </body>
+</html>
