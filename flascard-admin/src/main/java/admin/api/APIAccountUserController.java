@@ -7,6 +7,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,12 +27,13 @@ import admin.repository.AccountUserRepository;
 @RequestMapping(path = "/api/account_user", produces = "application/json")
 @CrossOrigin(origins= "${app.cors.origins}")
 // @CrossOrigin(origins= "http://localhost:8080")
-public class AccountUserController {
+public class APIAccountUserController {
     private AccountUserRepository accountUserRepository;
-
+    private PasswordEncoder passwordEncoder;
     @Autowired
-    public AccountUserController(AccountUserRepository accountUserRepository) {
+    public APIAccountUserController(AccountUserRepository accountUserRepository, PasswordEncoder passwordEncoder) {
         this.accountUserRepository = accountUserRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/get_all")
@@ -48,7 +51,9 @@ public class AccountUserController {
     @PostMapping(path="/create", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public AccountUser postAccountUser(@RequestBody AccountUser accountUser) {
-        return accountUserRepository.save(accountUser);
+        return accountUserRepository.save(new AccountUser(
+            accountUser.getUsername(), passwordEncoder.encode(accountUser.getPassword()), accountUser.getAuthority()) 
+        );
     }
     @PatchMapping(path="/update/{id}", consumes = "application/json")
     public AccountUser putAccountUser(@PathVariable("id") Long id, @RequestBody AccountUser patch) {

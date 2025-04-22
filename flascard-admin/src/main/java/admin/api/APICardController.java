@@ -23,12 +23,12 @@ import admin.repository.CardRepository;
 @RestController
 @RequestMapping(path = "/api/card", produces = "application/json")
 @CrossOrigin(origins = "${app.cors.origins}")
-public class CardController {
+public class APICardController {
 
     private CardRepository cardRepository;
 
     @Autowired
-    public CardController(CardRepository cardRepository) {
+    public APICardController(CardRepository cardRepository) {
         this.cardRepository = cardRepository;
     }
 

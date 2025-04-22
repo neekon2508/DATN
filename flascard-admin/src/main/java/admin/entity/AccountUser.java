@@ -35,9 +35,9 @@ public class AccountUser implements UserDetails{
     private String password;
     private String authority;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name="card_set")
-    private List<CardSet> cardSets = new ArrayList<>();
+    // @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    // @JoinColumn(name="card_set")
+    // private List<CardSet> cardSets = new ArrayList<>();
   
     public AccountUser(String username, String password, String authority) {
         this.username = username;

@@ -1,35 +1,30 @@
 <!DOCTYPE html>
-<html xmlns="http:/ /www.w3.org/1999/xhtml"
-     xmlns:th="http:/ /www.thymeleaf.org">
- <head>
-   <title>Login</title>
-   <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
-	 <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>  
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="d-flex justify-content-center align-items-center vh-100">
 
- </head>
- 
- <body class="p-3 mb-2 bg-body-secondary" >
-  <div class="container text-center w-25" >
-    <form method="POST" th:action="@{/login}" id="loginForm" style="margin-top: 40%;">
-      <div class="form-group">
-        <label for="username">Username: </label>
-        <input type="text" class="form-control" name="username" id="username" aria-describedby="emailHelp" placeholder="Enter user">
-      </div>
-      <div class="form-group">
-        <label for="password">Password: </label>
-        <input type="password" name="password" id="password" class="form-control" placeholder="Password">
-      </div>
-      <br>
-      <input type="submit" value="Login" class="btn btn-primary"/>
-    </form>
+    <div class="card p-4 shadow-lg" style="width: 350px;">
+        <h2 class="text-center">Login</h2>
 
-  </div>
+        <form method="POST" th:action="@{/login}" id="loginForm">
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-control" name="username" id="username" placeholder="Enter username">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-control" name="password" id="password" placeholder="Enter password">
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
 
-   <div th:if="${error}">
-     Unable to login. Check your username and password.
-   </div>
-   
-  
-   
- </body>
+        <div th:if="${error}" class="alert alert-danger mt-3 text-center">
+            Unable to login. Check your username and password.
+        </div>
+    </div>
+
+</body>
 </html>
