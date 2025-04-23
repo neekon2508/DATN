@@ -1,5 +1,7 @@
 package admin.api;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import admin.dto.CardDTO;
 import admin.entity.Card;
 import admin.repository.CardRepository;
 
@@ -33,15 +36,16 @@ public class APICardController {
     }
 
     @GetMapping("/get_all")
-    public Iterable<Card> allCards() {
-        return cardRepository.findAll();
+    public Iterable<CardDTO> allCards() {
+         return (Iterable<CardDTO>)((List<Card>)cardRepository.findAll()).stream().map(card->card.createDto()).toList();
+       
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<Card> cardById(@PathVariable("id") Long id) {
+    public ResponseEntity<CardDTO> cardById(@PathVariable("id") Long id) {
         Optional<Card> optCard = cardRepository.findById(id);
         if (optCard.isPresent()) 
-            return new ResponseEntity<>(optCard.get(), HttpStatus.OK);
+            return new ResponseEntity<>(optCard.get().createDto(), HttpStatus.OK);
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 

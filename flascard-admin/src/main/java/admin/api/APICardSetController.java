@@ -1,5 +1,6 @@
 package admin.api;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import admin.dto.CardSetDTO;
 import admin.entity.CardSet;
 import admin.repository.CardSetRepository;
 
@@ -32,16 +34,16 @@ public class APICardSetController {
     }
 
     @GetMapping("/get_all")
-    public Iterable<CardSet> allCardSets() {
-        return cardSetRepository.findAll();
+    public Iterable<CardSetDTO> allCardSets() {
+       return  (Iterable<CardSetDTO>)((List<CardSet>)cardSetRepository.findAll()).stream().map(cardset->cardset.createDTO()).toList();
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<CardSet> cardSetById(@PathVariable("id") Long id) {
+    public ResponseEntity<CardSetDTO> cardSetById(@PathVariable("id") Long id) {
         Optional<CardSet> optCardSet = cardSetRepository.findById(id);
 
         if (optCardSet.isPresent())
-            return new ResponseEntity<>(optCardSet.get(), HttpStatus.OK);
+            return new ResponseEntity<>(optCardSet.get().createDTO(), HttpStatus.OK);
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
     @PostMapping(path = "/create", consumes = "application/json")

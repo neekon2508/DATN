@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import admin.dto.CardDTO;
 import admin.entity.Card;
 
 @Service
@@ -23,10 +24,10 @@ public class RestCardService implements CardService{
     private String corsOrigins;
 
     @Override
-    public Iterable<Card> findAll() {
+    public Iterable<CardDTO> findAll() {
 
         return Arrays.asList(restTemplate.getForObject(corsOrigins+"/api/card/get_all", 
-        Card[].class));
+        CardDTO[].class));
     }
 
 }

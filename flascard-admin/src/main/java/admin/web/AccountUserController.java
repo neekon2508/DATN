@@ -8,10 +8,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import admin.dto.AccountUserDTO;
 import admin.entity.AccountUser;
 import admin.entity.CardSet;
 import admin.repository.AccountUserRepository;
@@ -40,10 +43,13 @@ public class AccountUserController {
     }
     @GetMapping("/{id}")
     public String getDetail(@PathVariable String id,Model model) {
-        AccountUser user = accountUserService.findAccountUserById(id);
-        List<CardSet> cardsets = user.getCard_sets();
-        System.out.println(cardsets.size());
-        model.addAttribute("card_sets", (Iterable<CardSet>)cardsets);
+        AccountUserDTO user = accountUserService.findAccountUserById(id);
+        model.addAttribute("card_sets", user.getCardSets());
         return "account_user_detail";
+    }
+    @PostMapping("/create")
+    public String addAccountUser( AccountUser accountUser) {
+        accountUserService.addAccountUser(accountUser);
+        return "redirect:/account_user";
     }
 }

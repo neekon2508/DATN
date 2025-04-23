@@ -32,8 +32,13 @@ public class RestAccountUserService implements AccountUserService{
     }
 
     @Override
-    public AccountUser findAccountUserById(String id) {
-       return restTemplate.getForObject(corsOrigins+"/api/account_user/get/{id}", AccountUser.class, id);
+    public AccountUserDTO findAccountUserById(String id) {
+       return restTemplate.getForObject(corsOrigins+"/api/account_user/get/{id}", AccountUserDTO.class, id);
+    }
+
+    @Override
+    public AccountUser addAccountUser(AccountUser accountUser) {
+        return restTemplate.postForObject(corsOrigins+"/api/account_user/create", accountUser, AccountUser.class);
     }
 
 }

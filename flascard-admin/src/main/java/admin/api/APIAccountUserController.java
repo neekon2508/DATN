@@ -1,5 +1,6 @@
 package admin.api;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import admin.dto.AccountUserDTO;
 import admin.dto.CardSetDTO;
 import admin.entity.AccountUser;
-import admin.entity.CardSet;
 import admin.repository.AccountUserRepository;
 
 @RestController
@@ -43,30 +43,20 @@ public class APIAccountUserController {
     @GetMapping("/get_all")
     public Iterable<AccountUserDTO> allAccountUsers() {
         List<AccountUser> accountUsers= (List<AccountUser>)accountUserRepository.findAll();
-        return (Iterable<AccountUserDTO>) accountUsers.stream().map(accountUser -> {
-            List<CardSetDTO> cardSetDTOs = accountUser.getCard_sets().stream()
-                .map(cardSet -> new CardSetDTO(
-                    cardSet.getId(),
-                    cardSet.getName(),
-                    accountUser.getId()
-                ))
-                .toList();
-
-            return new AccountUserDTO(
-                accountUser.getId(),
-                accountUser.getUsername(),accountUser.getPassword(),accountUser.getAuthority(),
-                cardSetDTOs
+        List<AccountUserDTO> accIterable = new ArrayList<>();
+        for (AccountUser accountUser : accountUsers) {
+            accIterable.add(
+                accountUser.createDTO()
             );
-        }).toList();
-
+        } 
+        return (Iterable<AccountUserDTO>) accIterable;
     }
     @GetMapping("/get/{id}")
-    public ResponseEntity<AccountUser> accountUserById(@PathVariable("id") Long id) {
+    public ResponseEntity<AccountUserDTO> accountUserById(@PathVariable("id") Long id) {
         Optional<AccountUser> optAccountUser = accountUserRepository.findById(id);
 
         if(optAccountUser.isPresent()){
-            return new ResponseEntity<>(optAccountUser.get(), HttpStatus.OK);
-
+            return new ResponseEntity<>(optAccountUser.get().createDTO(), HttpStatus.OK);
         }
         
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);

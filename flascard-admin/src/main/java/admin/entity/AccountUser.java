@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import admin.dto.AccountUserDTO;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -80,7 +81,6 @@ public class AccountUser implements UserDetails{
   }
 
   @OneToMany(mappedBy = "accountUser", cascade = CascadeType.ALL, orphanRemoval = true)
-  // @JoinColumn(name="accountuser_id")
   private List<CardSet> card_sets = new ArrayList<>();
 
   public void addCardSet(CardSet cardSet) {
@@ -90,4 +90,7 @@ public class AccountUser implements UserDetails{
   // public List<String> getCardSets() {
   //   return card_sets.stream().map(CardSet::getName).toList();
   // }
+  public AccountUserDTO createDTO() {
+    return new AccountUserDTO(id, username, password, authority, card_sets.stream().map(cardset->cardset.createDTO()).toList());
+  }
 }

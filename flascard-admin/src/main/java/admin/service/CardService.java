@@ -1,8 +1,9 @@
 package admin.service;
 
-import admin.entity.Card;
+import admin.dto.CardDTO;
+
 
 public interface CardService {
-    Iterable<Card> findAll();
+    Iterable<CardDTO> findAll();
     
 }

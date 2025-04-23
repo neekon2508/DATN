@@ -1,5 +1,6 @@
 package admin.entity;
 
+import admin.dto.CardDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,7 +20,7 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cardset_id")
     private CardSet cardSet;
     
@@ -44,4 +45,8 @@ public class Card {
     private String createdAt;
     @Column(name = "updatedat")
     private String updatedAt;
+
+    public CardDTO createDto() {
+        return new CardDTO(id, cardSet != null ? cardSet.getId() : 0, frontText, frontImage, frontSound, backText, backImage, backSound, isLearned, learnedAt, createdAt, updatedAt);
+    }
 }
