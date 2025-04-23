@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Card Set</title>
+        <title>Account User</title>
         <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
         <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>  
    
@@ -45,29 +45,28 @@
             </div>
         </nav>
 
-    <div>
-        <table class="table table-striped table-bordered table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col">User Id</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Actions</th> <!-- Cột mới -->
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="card_set: ${card_sets}">
-                    <td th:text="${card_set.id}"></td>
-                    <td th:text="${card_set.accountUser != null ? card_set.accountUser.id : 'No AccountUser'}"></td>
-                    <td th:text="${card_set.name}"></td>
-    
-                    <td>
-                        <button class="btn btn-primary btn-sm">Edit</button>
-                        <button class="btn btn-danger btn-sm">Delete</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+        <div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Actions</th> <!-- Cột mới -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="card_set: ${card_sets}">
+                        <td th:text="${card_set.id}"></td>
+                        <td th:text="${card_set.name}"></td>
+                        <td>
+                            <a href="#"></a>
+                            <button class="btn btn-primary btn-sm">Edit</button>
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+  
     </body>
 </html>

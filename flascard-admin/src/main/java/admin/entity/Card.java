@@ -1,5 +1,6 @@
 package admin.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -18,8 +19,8 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(name = "card_set")
+    @ManyToOne()
+    @JoinColumn(name = "cardset_id")
     private CardSet cardSet;
     
     @NotNull
@@ -34,8 +35,13 @@ public class Card {
     private String backImage;
     private String backSound;
 
+    @Column(name = "islearned")
     private Boolean isLearned;
+    @Column(name="learnedat")
     private String learnedAt;
+
+    @Column(name = "createdat")
     private String createdAt;
+    @Column(name = "updatedat")
     private String updatedAt;
 }

@@ -1,5 +1,6 @@
 package admin.api;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import admin.dto.AccountUserDTO;
+import admin.dto.CardSetDTO;
 import admin.entity.AccountUser;
+import admin.entity.CardSet;
 import admin.repository.AccountUserRepository;
 
 @RestController
@@ -37,15 +41,34 @@ public class APIAccountUserController {
     }
 
     @GetMapping("/get_all")
-    public Iterable<AccountUser> allAccountUsers() {
-        return accountUserRepository.findAll();
+    public Iterable<AccountUserDTO> allAccountUsers() {
+        List<AccountUser> accountUsers= (List<AccountUser>)accountUserRepository.findAll();
+        return (Iterable<AccountUserDTO>) accountUsers.stream().map(accountUser -> {
+            List<CardSetDTO> cardSetDTOs = accountUser.getCard_sets().stream()
+                .map(cardSet -> new CardSetDTO(
+                    cardSet.getId(),
+                    cardSet.getName(),
+                    accountUser.getId()
+                ))
+                .toList();
+
+            return new AccountUserDTO(
+                accountUser.getId(),
+                accountUser.getUsername(),accountUser.getPassword(),accountUser.getAuthority(),
+                cardSetDTOs
+            );
+        }).toList();
+
     }
     @GetMapping("/get/{id}")
     public ResponseEntity<AccountUser> accountUserById(@PathVariable("id") Long id) {
         Optional<AccountUser> optAccountUser = accountUserRepository.findById(id);
 
-        if(optAccountUser.isPresent())
+        if(optAccountUser.isPresent()){
             return new ResponseEntity<>(optAccountUser.get(), HttpStatus.OK);
+
+        }
+        
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
     @PostMapping(path="/create", consumes = "application/json")
@@ -69,4 +92,5 @@ public class APIAccountUserController {
             accountUserRepository.deleteById(id);
         } catch(EmptyResultDataAccessException e) {}
     }
+ 
 }

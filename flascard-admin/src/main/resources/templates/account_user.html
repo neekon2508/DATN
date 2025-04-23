@@ -31,7 +31,7 @@
                         <!-- Đẩy dropdown sang bên phải -->
                         <li class="nav-item dropdown ms-auto">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false" style="margin-left: 50%;" th:text=${username}>
+                                data-bs-toggle="dropdown" aria-expanded="false" style="margin-left: 50%;" th:text=${admin.username}>
                     
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
@@ -44,5 +44,33 @@
                 </div>
             </div>
         </nav>
+
+
+        <div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Password</th>
+                        <th scope="col">Authority</th>
+                        <th scope="col">Actions</th> <!-- Cột mới -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="account_user: ${account_users}" th:onclick="'window.location.href=\'/account_user/'+${account_user.id}+'\''">
+                        <td th:text="${account_user.id}"></td>
+                        <td th:text="${account_user.username}"></td>
+                        <td th:text="${account_user.password}"></td>
+                        <td th:text="${account_user.authority}"></td>
+                        <td>
+                            <button class="btn btn-primary btn-sm">Edit</button>
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+  
     </body>
 </html>
