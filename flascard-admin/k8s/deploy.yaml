@@ -1,0 +1,19 @@
+ apiVersion: apps/v1
+ kind: Deployment
+ metadata:
+  name: flashcardadmin-deploy
+  labels:
+    app: flashcardadmin
+ spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: flashcardadmin
+  template:
+    metadata:
+      labels:
+        app: flashcardadmin
+    spec:
+      containers:
+      - name: flashcardadmin-container
+        image: flashcardadmin:latest

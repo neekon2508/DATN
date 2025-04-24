@@ -1,4 +1,6 @@
 spring:
+ application:
+  name: flashcardadmin
  datasource:
    url: jdbc:mysql://mysql-26a06367-neekon250803.j.aivencloud.com:12350/flashcard?sslmode=require
    username: avnadmin

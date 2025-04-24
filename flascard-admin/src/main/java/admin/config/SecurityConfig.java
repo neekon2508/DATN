@@ -39,7 +39,7 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService(AccountUserRepository userRepository) {
         return username -> {
             Optional<AccountUser> optionalUser = userRepository.findByUsername(username);
-            if (optionalUser.isPresent())
+            if (optionalUser.isPresent() && optionalUser.get().getAuthority().equals("ROLE_ADMIN"))
              return optionalUser.get();
             throw new UsernameNotFoundException("User "+ username + " not found");
         };
@@ -56,6 +56,7 @@ public class SecurityConfig {
          .formLogin()
             .loginPage("/login")
                 .defaultSuccessUrl("/")
+                .failureUrl("/login")
         .and()
             .logout()
                 .logoutSuccessUrl("/login");
