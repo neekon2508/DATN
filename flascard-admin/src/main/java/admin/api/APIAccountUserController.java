@@ -83,4 +83,14 @@ public class APIAccountUserController {
         } catch(EmptyResultDataAccessException e) {}
     }
  
+    @PostMapping("/login")
+    public ResponseEntity<String> login (@RequestBody AccountUserDTO loginRequest) {
+
+        Optional<AccountUser> optionalAccountUser = accountUserRepository.findByUsername(loginRequest.getUsername());
+        if (optionalAccountUser.isPresent() 
+        && passwordEncoder.matches(loginRequest.getPassword(), optionalAccountUser.get().getPassword())
+        && optionalAccountUser.get().getAuthority().equals("ROLE_USER"))
+            return ResponseEntity.ok("Login successful");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+    }
 }

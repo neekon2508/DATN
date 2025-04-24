@@ -1,6 +1,8 @@
 package admin.config;
 
 
+import java.util.Optional;
+
 import javax.swing.Spring;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +38,9 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService(AccountUserRepository userRepository) {
         return username -> {
-            AccountUser user = userRepository.findByUsername(username);
-            if (user != null)
-             return user;
+            Optional<AccountUser> optionalUser = userRepository.findByUsername(username);
+            if (optionalUser.isPresent())
+             return optionalUser.get();
             throw new UsernameNotFoundException("User "+ username + " not found");
         };
     }
