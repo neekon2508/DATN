@@ -4,9 +4,12 @@ spring:
  datasource:
    url: jdbc:mysql://mysql-26a06367-neekon250803.j.aivencloud.com:12350/flashcard?sslmode=require
    username: avnadmin
-   password: 
+   password: ${DATABASE_PASSWORD}
+ config:
+  import: optional:file:variable.env[.properties]  
 server:
+  address: ${HOST_IP_ADDRESS}
   port: 8080
 app:
   cors:
-    origins: http://localhost:8080
+    origins: http://${HOST_IP_ADDRESS}:8080
