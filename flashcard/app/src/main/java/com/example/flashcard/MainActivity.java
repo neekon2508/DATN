@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -19,6 +20,7 @@ import android.media.Image;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.flashcard.data.BackgroundManager;
 import com.example.flashcard.data.FlashCardSQLiteHelper;
@@ -35,9 +37,10 @@ import java.io.File;
 
 public class MainActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
-
+    SharedPreferences user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        user = getSharedPreferences("USER", MODE_PRIVATE);
         ThemeManager.setTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -52,11 +55,26 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         BackgroundManager.setDefaultBackground(this, navigationView);
 
+        checkUser(navigationView);
 
         Fragment fragment = new FlashCardSetFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.content_frame, fragment);
         ft.commit();
+    }
+
+    private void checkUser(NavigationView navigationView) {
+        String username = user.getString("username", null);
+        if (username != null) {
+            ((MenuItem)navigationView.getMenu().findItem(R.id.nav_log_in)).setVisible(false);
+            ((MenuItem)navigationView.getMenu().findItem(R.id.nav_log_out)).setVisible(true);
+            ((TextView)navigationView.getHeaderView(0).
+                    findViewById(R.id.hello_user)).setText(getString(R.string.hello_user)+", "+username);
+        }
+        else {
+            ((MenuItem)navigationView.getMenu().findItem(R.id.nav_log_in)).setVisible(true);
+            ((MenuItem)navigationView.getMenu().findItem(R.id.nav_log_out)).setVisible(false);
+        }
     }
 
     @Override
@@ -84,6 +102,13 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_log_in:
                 intent = new Intent(this, LogInActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.nav_log_out:
+                user.edit().clear().apply();
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                break;
             default:
                 fragment = new FlashCardSetFragment();
         }

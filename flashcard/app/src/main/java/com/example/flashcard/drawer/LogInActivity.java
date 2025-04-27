@@ -5,17 +5,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.flashcard.MainActivity;
 import com.example.flashcard.R;
 import com.example.flashcard.data.ThemeManager;
 import com.example.flashcard.dto.AccountUserDTO;
 import com.example.flashcard.method.SignUpActivity;
 import com.example.flashcard.service.APIAccountUser;
 import com.example.flashcard.service.RetrofitClient;
+import com.google.gson.JsonObject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,9 +28,10 @@ import retrofit2.Retrofit;
 public class LogInActivity extends AppCompatActivity {
 
     private static Retrofit retrofit = RetrofitClient.getRetrofitInstance();
-
+    private SharedPreferences user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        user= getSharedPreferences("USER", MODE_PRIVATE);
         ThemeManager.setTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
@@ -58,14 +62,18 @@ public class LogInActivity extends AppCompatActivity {
             loginRequest.setUsername(username);
             loginRequest.setPassword(password);
 
-            api.login(loginRequest).enqueue(new Callback<String>() {
+            api.login(loginRequest).enqueue(new Callback<JsonObject>() {
                 @Override
-                public void onResponse(Call<String> call, Response<String> response) {
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                     if (response.isSuccessful()) {
-                        String message = response.body();
+                        JsonObject message = response.body();
                         // Xử lý thông báo thành công
-                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                        user.edit().putString("username", username).apply();
+                        Toast.makeText(getApplicationContext(), message.get("message").getAsString(), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
                         finish();
+
                     } else {
                         // Xử lý lỗi đăng nhập
                         Toast.makeText(getApplicationContext(), "Login failed!", Toast.LENGTH_SHORT).show();
@@ -75,8 +83,9 @@ public class LogInActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<String> call, Throwable t) {
+                public void onFailure(Call<JsonObject> call, Throwable t) {
                     // Xử lý lỗi kết nối
+                    t.printStackTrace();
                     Toast.makeText(getApplicationContext(), "Connection error!", Toast.LENGTH_SHORT).show();
                 }
             });

@@ -1,7 +1,9 @@
 package admin.api;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,13 +86,19 @@ public class APIAccountUserController {
     }
  
     @PostMapping("/login")
-    public ResponseEntity<String> login (@RequestBody AccountUserDTO loginRequest) {
+    public ResponseEntity<Map<String,String>> login (@RequestBody AccountUserDTO loginRequest) {
 
         Optional<AccountUser> optionalAccountUser = accountUserRepository.findByUsername(loginRequest.getUsername());
+        Map<String,String> response = new HashMap<>();
         if (optionalAccountUser.isPresent() 
         && passwordEncoder.matches(loginRequest.getPassword(), optionalAccountUser.get().getPassword())
         && optionalAccountUser.get().getAuthority().equals("ROLE_USER"))
-            return ResponseEntity.ok("Login successful");
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+        {
+            response.put("message", "Login successfully");
+            return ResponseEntity.ok(response);
+        }
+        response.put("message","Invalid username or password");
+            
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 }

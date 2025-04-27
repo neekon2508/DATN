@@ -64,5 +64,6 @@
     <string name="user_password">Mật Khẩu</string>
     <string name="dont_have_account">Không Có Tài Khoản?</string>
     <string name="sign_up">Đăng Ký</string>
-
+    <string name="log_out">Đăng Xuất</string>
+    <string name="hello_user">Xin Chào</string>
 </resources>
