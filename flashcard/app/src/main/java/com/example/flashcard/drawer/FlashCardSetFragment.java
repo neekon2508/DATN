@@ -1,6 +1,9 @@
 package com.example.flashcard.drawer;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,26 +31,40 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.flashcard.R;
+import com.example.flashcard.adapter.CardSetAdapter;
 import com.example.flashcard.data.FlashCardSQLiteHelper;
 
 import com.example.flashcard.data.ThemeManager;
+import com.example.flashcard.dto.AccountUserDTO;
+import com.example.flashcard.dto.CardSetDTO;
 import com.example.flashcard.method.CreateCardActivity;
 import com.example.flashcard.method.LearnActivity;
 import com.example.flashcard.method.ListCardActivity;
+import com.example.flashcard.service.APIAccountUser;
+import com.example.flashcard.service.RetrofitClient;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.JsonObject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 
 public class FlashCardSetFragment extends Fragment implements View.OnClickListener{
     private SQLiteDatabase db;
-    private boolean firstVisit;
     private Cursor setsCursor;
+    private static Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+    SharedPreferences user;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ThemeManager.setTheme(getContext());
-        firstVisit = true;
+
+        user = getActivity().getSharedPreferences("USER", MODE_PRIVATE);
+
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_flash_card_set, container, false);
 
@@ -96,11 +113,28 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
     private void setupListView(View view) {
         //Populate the list_set ListView from a cursor
         ListView listView = view.findViewById(R.id.list_sets);
-       try {
-           FlashCardSQLiteHelper flashCardSQLiteHelper = new FlashCardSQLiteHelper(getContext());
-           db = flashCardSQLiteHelper.getReadableDatabase();
-           setsCursor = db.query("CARDSET", new String[] {"_id", "NAME"},
-                   null, null, null, null, null);
+       if (user != null) {
+           APIAccountUser api = retrofit.create(APIAccountUser.class);
+           api.getByUsername(user.getString("username", null)).enqueue(new Callback<AccountUserDTO>() {
+               @Override
+               public void onResponse(Call<AccountUserDTO> call, Response<AccountUserDTO> response) {
+                   AccountUserDTO accountUserDTO = response.body();
+                   CardSetAdapter cardSetAdapter = new CardSetAdapter(view.getContext(), accountUserDTO.getCardSets());
+                   listView.setAdapter(cardSetAdapter);
+               }
+
+               @Override
+               public void onFailure(Call<AccountUserDTO> call, Throwable t) {
+                   Toast.makeText(view.getContext(),R.string.data_unavailable_message,Toast.LENGTH_SHORT).show();
+               }
+           });
+       }
+       else {
+           try {
+               FlashCardSQLiteHelper flashCardSQLiteHelper = new FlashCardSQLiteHelper(getContext());
+               db = flashCardSQLiteHelper.getReadableDatabase();
+               setsCursor = db.query("CARDSET", new String[] {"_id", "NAME"},
+                       null, null, null, null, null);
                CursorAdapter setsAdapter =
                        new SimpleCursorAdapter(getContext(),
                                R.layout.item_cardset,
@@ -109,34 +143,54 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
                                new int[] {R.id.cardSetName}, 0);
                listView.setAdapter(setsAdapter);
 
-       } catch (SQLException e) {
-           Toast.makeText(getContext(), R.string.data_unavailable_message, Toast.LENGTH_SHORT).show();
+           } catch (SQLException e) {
+               Toast.makeText(getContext(), R.string.data_unavailable_message, Toast.LENGTH_SHORT).show();
+           }
        }
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
-                try (FlashCardSQLiteHelper flashCardSQLiteHelper = new FlashCardSQLiteHelper(getContext());
-                     SQLiteDatabase db = flashCardSQLiteHelper.getReadableDatabase();
-                     Cursor cardsCursor = db.query("CARD", new String[] {"_id"},
-                             "CARDSETID=?", new String[] {Integer.toString((int)id)}, null, null, null);)
-                {
-                    if (cardsCursor.moveToFirst()) {
+                if (user != null) {
+                    CardSetDTO cardSetDTO = (CardSetDTO) listView.getItemAtPosition(position);
+                    if (cardSetDTO.getCards() != null) {
                         Intent intent = new Intent(getActivity(), LearnActivity.class);
-                        intent.putExtra(CreateCardActivity.EXTRA_CARDSETID, String.valueOf(id));
+                        intent.putExtra(CreateCardActivity.EXTRA_CARDSETID, String.valueOf(cardSetDTO.getId()));
                         startActivity(intent);
                     }
                     else {
                         Snackbar snackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), R.string.empty_set, Snackbar.LENGTH_LONG);
                         snackbar.setAction(R.string.add, t -> {
                             Intent intent = new Intent(getActivity(), CreateCardActivity.class);
-                            intent.putExtra(CreateCardActivity.EXTRA_CARDSETID, String.valueOf(id));
+                            intent.putExtra(CreateCardActivity.EXTRA_CARDSETID, String.valueOf(cardSetDTO.getId()));
                             startActivity(intent);
                         });
                         snackbar.show();
                     }
-
-                } catch (SQLException e) {
-                    Toast.makeText(getContext(),R.string.data_unavailable_message, Toast.LENGTH_SHORT);
+                }
+                else {
+                    try (FlashCardSQLiteHelper flashCardSQLiteHelper = new FlashCardSQLiteHelper(getContext());
+                         SQLiteDatabase db = flashCardSQLiteHelper.getReadableDatabase();
+                         Cursor cardsCursor = db.query("CARD", new String[] {"_id"},
+                                 "CARDSETID=?", new String[] {Integer.toString((int)id)}, null, null, null);)
+                    {
+                        if (cardsCursor.moveToFirst()) {
+                            Intent intent = new Intent(getActivity(), LearnActivity.class);
+                            intent.putExtra(CreateCardActivity.EXTRA_CARDSETID, String.valueOf(id));
+                            startActivity(intent);
+                        }
+                        else {
+                            Snackbar snackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), R.string.empty_set, Snackbar.LENGTH_LONG);
+                            snackbar.setAction(R.string.add, t -> {
+                                Intent intent = new Intent(getActivity(), CreateCardActivity.class);
+                                intent.putExtra(CreateCardActivity.EXTRA_CARDSETID, String.valueOf(id));
+                                startActivity(intent);
+                            });
+                            snackbar.show();
+                        }
+                    } catch (SQLException e) {
+                        Toast.makeText(getContext(),R.string.data_unavailable_message, Toast.LENGTH_SHORT);
+                    }
                 }
 
             }
