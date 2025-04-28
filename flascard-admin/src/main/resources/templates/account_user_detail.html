@@ -2,8 +2,9 @@
     <head>
         <title>Account User</title>
         <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
-        <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>  
-   
+
+      
+        <link rel="stylesheet" th:href="@{/custom/css/popup_create.css}">
     </head>
 
     <body>
@@ -41,6 +42,23 @@
             </div>
         </nav>
 
+        <div class="container mt-5">
+            <button class="btn btn-primary" onclick="openPopup()">Thêm CardSet</button>
+    
+            <div id="popup" class="popup">
+                <form th:action="@{/account_user/{account_user_id}/create_cardset(account_user_id=${account_user_id})}" method="post">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Name:</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success">Add</button>
+                        <button type="button" class="btn btn-secondary" onclick="closePopup()">Đóng</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div>
             <table class="table table-striped table-bordered table-hover">
                 <thead class="table-dark">
@@ -66,5 +84,8 @@
             </table>
         </div>
   
+
+        <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>  
+        <script type="text/javascript" th:src="@{/custom/js/popup_create.js}"></script>
     </body>
 </html>

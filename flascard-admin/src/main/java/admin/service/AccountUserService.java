@@ -1,12 +1,14 @@
 package admin.service;
 
 import admin.dto.AccountUserDTO;
+import admin.dto.CardSetDTO;
 import admin.entity.AccountUser;
 
 
 public interface AccountUserService {
 
     Iterable<AccountUserDTO> findAll();
-    AccountUserDTO findAccountUserById(String id);
+    AccountUserDTO findAccountUserDTOById(Long id);
     AccountUser addAccountUser(AccountUser accountUser);
+    AccountUserDTO addCardSetToAccountUser(Long id, CardSetDTO cardSetDTO);
 }

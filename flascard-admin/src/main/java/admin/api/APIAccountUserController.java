@@ -27,7 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 import admin.dto.AccountUserDTO;
 import admin.dto.CardSetDTO;
 import admin.entity.AccountUser;
+import admin.entity.CardSet;
 import admin.repository.AccountUserRepository;
+import admin.repository.CardSetRepository;
 
 @RestController
 @RequestMapping(path = "/api/account_user", produces = "application/json")
@@ -35,10 +37,12 @@ import admin.repository.AccountUserRepository;
 // @CrossOrigin(origins= "http://localhost:8080")
 public class APIAccountUserController {
     private AccountUserRepository accountUserRepository;
+    private CardSetRepository cardSetRepository;
     private PasswordEncoder passwordEncoder;
     @Autowired
-    public APIAccountUserController(AccountUserRepository accountUserRepository, PasswordEncoder passwordEncoder) {
+    public APIAccountUserController(AccountUserRepository accountUserRepository, CardSetRepository cardSetRepository, PasswordEncoder passwordEncoder) {
         this.accountUserRepository = accountUserRepository;
+        this.cardSetRepository = cardSetRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -53,7 +57,7 @@ public class APIAccountUserController {
         } 
         return (Iterable<AccountUserDTO>) accIterable;
     }
-    @GetMapping("/get/{id}")
+    @GetMapping("/getById/{id}")
     public ResponseEntity<AccountUserDTO> accountUserById(@PathVariable("id") Long id) {
         Optional<AccountUser> optAccountUser = accountUserRepository.findById(id);
 
@@ -63,6 +67,15 @@ public class APIAccountUserController {
         
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
+    @GetMapping("/getByUsername/{username}")
+    public ResponseEntity<AccountUserDTO> accountUserByUserName(@PathVariable("username") String username) {
+        Optional<AccountUser> optAccountUser = accountUserRepository.findByUsername(username);
+
+        if (optAccountUser.isPresent()) {
+            return new ResponseEntity<>(optAccountUser.get().createDTO(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
     @PostMapping(path="/create", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public AccountUser postAccountUser(@RequestBody AccountUser accountUser) {
@@ -70,12 +83,26 @@ public class APIAccountUserController {
             accountUser.getUsername(), passwordEncoder.encode(accountUser.getPassword()), accountUser.getAuthority()) 
         );
     }
+    @PostMapping(path="/create_card_set/{id}", consumes ="application/json")
+    @ResponseStatus(HttpStatus.CREATED)
+    public AccountUserDTO addCardSettoAccountUser(@PathVariable Long id, @RequestBody CardSetDTO cardSetDTO) {
+        AccountUser accountUser = accountUserRepository.findById(id).get();
+        CardSet newCardSet = new CardSet();
+        newCardSet.setName(cardSetDTO.getName());
+
+        newCardSet.setAccountUser(accountUser);
+        accountUser.getCard_sets().add(newCardSet);
+        return accountUserRepository.save(accountUser).createDTO();
+    }
     @PatchMapping(path="/update/{id}", consumes = "application/json")
-    public AccountUser putAccountUser(@PathVariable("id") Long id, @RequestBody AccountUser patch) {
+    public AccountUserDTO putAccountUser(@PathVariable("id") Long id, @RequestBody AccountUserDTO patch) {
         AccountUser accountUser = accountUserRepository.findById(id).get();
         if (patch.getUsername() != null)
           accountUser.setUsername(patch.getUsername());
-        return accountUserRepository.save(accountUser);
+        if (patch.getCardSets() != null)
+            accountUser.setCard_sets(
+                patch.getCardSets().stream().map(dto->cardSetRepository.findById(dto.getId()).get()).toList());
+        return accountUserRepository.save(accountUser).createDTO();
     }
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -84,7 +111,6 @@ public class APIAccountUserController {
             accountUserRepository.deleteById(id);
         } catch(EmptyResultDataAccessException e) {}
     }
- 
     @PostMapping("/login")
     public ResponseEntity<Map<String,String>> login (@RequestBody AccountUserDTO loginRequest) {
 
@@ -101,4 +127,5 @@ public class APIAccountUserController {
             
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
+    
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import admin.dto.AccountUserDTO;
+import admin.dto.CardSetDTO;
 import admin.entity.AccountUser;
 import admin.entity.CardSet;
 import admin.repository.AccountUserRepository;
@@ -42,14 +43,22 @@ public class AccountUserController {
 
     }
     @GetMapping("/{id}")
-    public String getDetail(@PathVariable String id,Model model) {
-        AccountUserDTO user = accountUserService.findAccountUserById(id);
+    public String getDetail(@PathVariable Long id,Model model) {
+        AccountUserDTO user = accountUserService.findAccountUserDTOById(id);
         model.addAttribute("card_sets", user.getCardSets());
+        model.addAttribute("account_user_id", id);
         return "account_user_detail";
+    }
+    @PostMapping("/{id}/create_cardset")
+    public String addCardSet(@PathVariable Long id, CardSetDTO cardSetDTO) {
+        System.out.println(cardSetDTO);
+        accountUserService.addCardSetToAccountUser(id, cardSetDTO);
+        return "redirect:/account_user";
     }
     @PostMapping("/create")
     public String addAccountUser( AccountUser accountUser) {
         accountUserService.addAccountUser(accountUser);
         return "redirect:/account_user";
     }
+ 
 }

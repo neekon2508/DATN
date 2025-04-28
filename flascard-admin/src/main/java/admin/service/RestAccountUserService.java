@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -32,13 +33,20 @@ public class RestAccountUserService implements AccountUserService{
     }
 
     @Override
-    public AccountUserDTO findAccountUserById(String id) {
-       return restTemplate.getForObject(corsOrigins+"/api/account_user/get/{id}", AccountUserDTO.class, id);
+    public AccountUserDTO findAccountUserDTOById(Long id) {
+       return restTemplate.getForObject(corsOrigins+"/api/account_user/getById/{id}", AccountUserDTO.class, id);
     }
 
     @Override
     public AccountUser addAccountUser(AccountUser accountUser) {
         return restTemplate.postForObject(corsOrigins+"/api/account_user/create", accountUser, AccountUser.class);
     }
+
+    @Override
+    public AccountUserDTO addCardSetToAccountUser(Long id, CardSetDTO cardSetDTO) {
+        return restTemplate.postForObject(corsOrigins+"/api/account_user/create_card_set/{id}", cardSetDTO, AccountUserDTO.class, id);
+    }
+
+
 
 }
