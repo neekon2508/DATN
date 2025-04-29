@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,11 +54,16 @@ public class AccountUserController {
     public String addCardSet(@PathVariable Long id, CardSetDTO cardSetDTO) {
         System.out.println(cardSetDTO);
         accountUserService.addCardSetToAccountUser(id, cardSetDTO);
-        return "redirect:/account_user";
+        return "redirect:/account_user/"+id;
     }
     @PostMapping("/create")
     public String addAccountUser( AccountUser accountUser) {
         accountUserService.addAccountUser(accountUser);
+        return "redirect:/account_user";
+    }
+    @PostMapping("/update/{id}")
+    public String updateAccountUser(@PathVariable Long id, AccountUser accountUser) {
+        accountUserService.updateAccountUser(id, accountUser.createDTO());
         return "redirect:/account_user";
     }
  

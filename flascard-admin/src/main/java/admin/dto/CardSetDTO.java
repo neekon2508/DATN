@@ -15,7 +15,7 @@ public class CardSetDTO {
         this.id = id;
         this.name = name;
         this.accountUserId = accountUserId;
-        cards = this.cards;
+        this.cards=cards;
     }
 
 

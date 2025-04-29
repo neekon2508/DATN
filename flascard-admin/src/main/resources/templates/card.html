@@ -7,42 +7,43 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <a class="navbar-brand" th:href=@{/}>Admin</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-                    aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                
-                <!-- Căn giữa navbar-nav -->
-                <div class="collapse navbar-collapse justify-content-center" id="navbarNavDropdown">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" th:href=@{/account_user}>Người dùng</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href=@{/card_set}>Bộ Thẻ</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href=@{/card}>Thẻ Nhớ</a>
-                        </li>
-                        
-                        <!-- Đẩy dropdown sang bên phải -->
-                        <li class="nav-item dropdown ms-auto">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false" style="margin-left: 50%;" th:text=${admin.username}>
-                    
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li><a class="dropdown-item" th:href=@{/logout}>Thoát</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+        <div th:insert="~{fragments/my_template :: top_menu}"></div>
+        <div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">CardSet Id</th>
+                        <th scope="col">Front Text</th>
+                        <th scope="col">Front Image</th> 
+                        <th scope="col">Front Sound</th> 
+                        <th scope="col">Back Text</th>
+                        <th scope="col">Back Image</th> 
+                        <th scope="col">Back Sound</th> 
+                        <th scope="col">Is Learned</th>
+                        <th scope="col">Actions</th> 
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="card: ${cards}">
+                        <td th:text="${card.id}"></td>
+                        <td th:text="${card.cardSetId}"></td>
+                        <td th:text="${card.frontText}"></td>
+                        <td th:text="${card.frontImage}"></td>
+                        <td th:text="${card.frontSound}"></td>
+                        <td th:text="${card.backText}"></td>
+                        <td th:text="${card.backImage}"></td>
+                        <td th:text="${card.backSound}"></td>
+                        <td th:text="${card.isLearned}"></td>
+                        <td>
+                            <a href="#"></a>
+                            <button class="btn btn-primary btn-sm">Edit</button>
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+  
     </body>
 </html>

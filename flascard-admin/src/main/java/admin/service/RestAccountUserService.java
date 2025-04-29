@@ -47,6 +47,11 @@ public class RestAccountUserService implements AccountUserService{
         return restTemplate.postForObject(corsOrigins+"/api/account_user/create_card_set/{id}", cardSetDTO, AccountUserDTO.class, id);
     }
 
+    @Override
+    public AccountUserDTO updateAccountUser(Long id, AccountUserDTO accountUserDTO) {
+       return restTemplate.patchForObject(corsOrigins+"/api/account_user/update/{id}", accountUserDTO, AccountUserDTO.class, id);
+    }
+
 
 
 }

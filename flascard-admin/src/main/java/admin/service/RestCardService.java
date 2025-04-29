@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import admin.dto.CardDTO;
+import admin.dto.CardSetDTO;
 import admin.entity.Card;
 
 @Service
@@ -29,5 +30,7 @@ public class RestCardService implements CardService{
         return Arrays.asList(restTemplate.getForObject(corsOrigins+"/api/card/get_all", 
         CardDTO[].class));
     }
+
+
 
 }

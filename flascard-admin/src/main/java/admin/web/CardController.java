@@ -24,10 +24,6 @@ public class CardController {
     }
     @GetMapping()
     public String get(Model model) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        AccountUser admin = (AccountUser) authentication.getPrincipal();
-        model.addAttribute("username", admin.getUsername());
         model.addAttribute("cards", cardService.findAll());
         return "card";
     }

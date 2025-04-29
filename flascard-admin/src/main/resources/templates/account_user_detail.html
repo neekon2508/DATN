@@ -8,42 +8,9 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <a class="navbar-brand" th:href=@{/}>Admin</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-                    aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                
-                <!-- Căn giữa navbar-nav -->
-                <div class="collapse navbar-collapse justify-content-center" id="navbarNavDropdown">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" th:href=@{/account_user}>Người dùng</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href=@{/card_set}>Bộ Thẻ</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href=@{/card}>Thẻ Nhớ</a>
-                        </li>
-                        
-                        <!-- Đẩy dropdown sang bên phải -->
-                        <li class="nav-item dropdown ms-auto">
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li><a class="dropdown-item" th:href=@{/logout}>Thoát</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+        <div th:insert="~{fragments/my_template :: top_menu}"></div>
 
-        <div class="container mt-5">
-            <button class="btn btn-primary" onclick="openPopup()">Thêm CardSet</button>
+        <div th:insert="~{fragments/my_template :: search_add}"></div>
     
             <div id="popup" class="popup">
                 <form th:action="@{/account_user/{account_user_id}/create_cardset(account_user_id=${account_user_id})}" method="post">
@@ -57,7 +24,6 @@
                     </div>
                 </form>
             </div>
-        </div>
 
         <div>
             <table class="table table-striped table-bordered table-hover">
@@ -70,7 +36,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="card_set: ${card_sets}">
+                    <tr th:each="card_set: ${card_sets}" th:onclick="'window.location.href=\'/card_set/'+${card_set.id}+'\''">
                         <td th:text="${card_set.id}"></td>
                         <td th:text="${card_set.accountUserId}"></td>
                         <td th:text="${card_set.name}"></td>

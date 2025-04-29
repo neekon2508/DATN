@@ -11,4 +11,5 @@ public interface AccountUserService {
     AccountUserDTO findAccountUserDTOById(Long id);
     AccountUser addAccountUser(AccountUser accountUser);
     AccountUserDTO addCardSetToAccountUser(Long id, CardSetDTO cardSetDTO);
+    AccountUserDTO updateAccountUser(Long id, AccountUserDTO accountUserDTO);
 }

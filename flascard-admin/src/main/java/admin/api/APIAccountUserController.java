@@ -9,7 +9,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -96,12 +95,14 @@ public class APIAccountUserController {
     }
     @PatchMapping(path="/update/{id}", consumes = "application/json")
     public AccountUserDTO putAccountUser(@PathVariable("id") Long id, @RequestBody AccountUserDTO patch) {
+        patch.setPassword(passwordEncoder.encode(patch.getPassword()));
         AccountUser accountUser = accountUserRepository.findById(id).get();
         if (patch.getUsername() != null)
           accountUser.setUsername(patch.getUsername());
-        if (patch.getCardSets() != null)
-            accountUser.setCard_sets(
-                patch.getCardSets().stream().map(dto->cardSetRepository.findById(dto.getId()).get()).toList());
+        if (patch.getPassword() != null)
+            accountUser.setPassword(patch.getPassword());
+        if (patch.getAuthority() != null)
+            accountUser.setAuthority(patch.getAuthority());
         return accountUserRepository.save(accountUser).createDTO();
     }
     @DeleteMapping("/delete/{id}")

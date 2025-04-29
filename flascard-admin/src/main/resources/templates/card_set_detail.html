@@ -1,0 +1,89 @@
+<html>
+    <head>
+        <title>Card Set Detail</title>
+        <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+
+      
+        <link rel="stylesheet" th:href="@{/custom/css/popup_create.css}">
+    </head>
+
+    <body>
+        <div th:insert="~{fragments/my_template :: top_menu}"></div>
+
+        <div th:insert="~{fragments/my_template :: search_add}"></div>
+    
+            <div id="popup" class="popup">
+                <form th:action="@{/card_set/{card_set_id}/create_card(card_set_id=${card_set.id})}" method="post">
+                    <div class="mb-3">
+                        <label for="frontText" class="form-label">Front Text:</label>
+                        <input type="text" class="form-control" id="frontText" name="frontText" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="frontImage" class="form-label">Front Image:</label>
+                        <input type="text" class="form-control" id="frontImage" name="frontImage" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="frontSound" class="form-label">Front Sound:</label>
+                        <input type="text" class="form-control" id="frontSound" name="frontSound" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="backText" class="form-label">Back Text:</label>
+                        <input type="text" class="form-control" id="backText" name="backText" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="backImage" class="form-label">Back Image:</label>
+                        <input type="text" class="form-control" id="backImage" name="backImage" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="backSound" class="form-label">Back Sound:</label>
+                        <input type="text" class="form-control" id="backSound" name="backSound" required>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success">Add</button>
+                        <button type="button" class="btn btn-secondary" onclick="closePopup()">Đóng</button>
+                    </div>
+                </form>
+            </div>
+
+        <div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">CardSet Id</th>
+                        <th scope="col">Front Text</th>
+                        <th scope="col">Front Image</th> 
+                        <th scope="col">Front Sound</th> 
+                        <th scope="col">Back Text</th>
+                        <th scope="col">Back Image</th> 
+                        <th scope="col">Back Sound</th> 
+                        <th scope="col">Is Learned</th> 
+                        <th scope="col">Actions</th> 
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="card: ${card_set.cards}">
+                        <td th:text="${card.id}"></td>
+                        <td th:text="${card.cardSetId}"></td>
+                        <td th:text="${card.frontText}"></td>
+                        <td th:text="${card.frontImage}"></td>
+                        <td th:text="${card.frontSound}"></td>
+                        <td th:text="${card.backText}"></td>
+                        <td th:text="${card.backImage}"></td>
+                        <td th:text="${card.backSound}"></td>
+                        <td th:text="${card.isLearned}"></td>
+                        <td>
+                            <a href="#"></a>
+                            <button class="btn btn-primary btn-sm">Edit</button>
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+  
+
+        <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>  
+        <script type="text/javascript" th:src="@{/custom/js/popup_create.js}"></script>
+    </body>
+</html>

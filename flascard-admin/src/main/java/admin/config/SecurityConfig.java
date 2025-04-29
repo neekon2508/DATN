@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -63,14 +64,21 @@ public class SecurityConfig {
     
         return http.build();
     }
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
+    // @Bean
+    // public RestTemplate restTemplate() {
+    //     return new RestTemplate();
+    // }
 
     // @Bean
     // public AccountUserService accountUserService() {
     //     return new RestAccountUserService(new RestTemplate());
     // }
+
+    //Support PATCH HTTP Method
+    @Bean
+    public RestTemplate restTemplate() {
+        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+        return new RestTemplate(factory);
+    }
 
 }
