@@ -1,5 +1,7 @@
 package admin.dto;
 
+import java.io.File;
+
 import admin.entity.CardSet;
 import jakarta.persistence.Column;
 import jakarta.persistence.FetchType;
@@ -50,6 +52,15 @@ public class CardDTO {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
-
+   public void delete() {
+        if (!frontImage.isEmpty())
+            (new File(frontImage)).delete();
+        if (!backImage.isEmpty())
+            (new File(backImage)).delete();
+        if (!backImage.isEmpty())
+            (new File(backImage)).delete();
+        if (!backSound.isEmpty())
+            (new File(backSound)).delete();
+    }
     
 }

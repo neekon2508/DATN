@@ -12,4 +12,6 @@ public interface AccountUserService {
     AccountUser addAccountUser(AccountUser accountUser);
     AccountUserDTO addCardSetToAccountUser(Long id, CardSetDTO cardSetDTO);
     AccountUserDTO updateAccountUser(Long id, AccountUserDTO accountUserDTO);
+    void deleteAccountUserById(Long id);
+    Iterable<AccountUserDTO> findAccountUserDTOByUserName(String userName);
 }

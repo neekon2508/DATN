@@ -9,4 +9,5 @@ public interface CardSetService {
     CardSetDTO findCardSetDTOById(Long id);
     CardSetDTO addCardToCardSet(Long id, CardDTO cardDTO);
     CardSetDTO updateCardSet(Long id, CardSetDTO cardSetDTO);
+    Iterable<CardSetDTO> getByName(String name);
 }

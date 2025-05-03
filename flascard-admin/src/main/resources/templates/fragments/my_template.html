@@ -49,13 +49,12 @@
         <tr>
             <td style="text-align: center; vertical-align: middle;">
                 <!-- Nút Search -->
-                <form  class="d-inline-block">
-                    <input class="form-control d-inline-block" style="width: 200px; height:auto; display: inline;" type="search" placeholder="Tìm kiếm" aria-label="Search">
+                <form  class="d-inline-block" onsubmit="search(event);">
+                    <input class="form-control d-inline-block" id="input" style="width: 200px; height:auto; display: inline;" type="search" placeholder="Tìm kiếm" aria-label="Search">
                     <button class="btn btn-outline-primary" style="height: 40px; display: inline;" type="submit">Search</button>
                 </form>
-    
                 <!-- Nút Add -->
-                <button onclick="openPopup()" class="btn btn-primary" style="height: 40px; margin-left: 10px;">Add</button>
+                <button onclick="openPopup()" class="btn btn-primary" id="addButton" style="height: 40px; margin-left: 10px;">Add</button>
             </td>
         </tr>
     </table>

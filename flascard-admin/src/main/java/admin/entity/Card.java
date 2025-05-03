@@ -1,5 +1,7 @@
 package admin.entity;
 
+import java.io.File;
+
 import admin.dto.CardDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -49,4 +51,6 @@ public class Card {
     public CardDTO createDto() {
         return new CardDTO(id, cardSet != null ? cardSet.getId() : 0, frontText, frontImage, frontSound, backText, backImage, backSound, isLearned, learnedAt, createdAt, updatedAt);
     }
+
+    
 }

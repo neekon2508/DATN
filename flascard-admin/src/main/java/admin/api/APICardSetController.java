@@ -51,6 +51,13 @@ public class APICardSetController {
             return new ResponseEntity<>(optCardSet.get().createDTO(), HttpStatus.OK);
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
+
+    @GetMapping("/getByName/{name}")
+    public Iterable<CardSetDTO> getByName(@PathVariable String name) {
+        var cardSets = (List<CardSetDTO>)allCardSets();
+        cardSets.removeIf(cardset->!cardset.getName().contains(name));
+        return (Iterable<CardSetDTO>)cardSets;
+    }
     @PostMapping(path="/create_card/{id}", consumes ="application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public CardSetDTO addCardtoCardSet(@PathVariable Long id, @RequestBody CardDTO cardDTO) {
@@ -90,6 +97,8 @@ public class APICardSetController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCardSet(@PathVariable("id") Long id) {
         try {
+            CardSetDTO a = cardSetById(id).getBody();
+            a.delete();
             cardSetRepository.deleteById(id);
         } catch(EmptyResultDataAccessException e) {}
     }

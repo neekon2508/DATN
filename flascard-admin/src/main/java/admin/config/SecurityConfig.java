@@ -60,7 +60,12 @@ public class SecurityConfig {
                 .failureUrl("/login")
         .and()
             .logout()
-                .logoutSuccessUrl("/login");
+                .logoutSuccessUrl("/login")
+        .and()
+            .sessionManagement()
+                .invalidSessionUrl("/login?session=expired")
+            ;
+        
     
         return http.build();
     }

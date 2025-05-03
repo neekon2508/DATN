@@ -18,6 +18,14 @@ public class AccountUserDTO {
         this.cardSets = cardSets;
         this.authority = authority;
     }
+    public void delete() {
+        if (!getCardSets().isEmpty())
+            for (CardSetDTO cardSetDTO : getCardSets()) 
+                if (!cardSetDTO.getCards().isEmpty())
+                 for (CardDTO cardDTO : cardSetDTO.getCards())
+                    if (cardDTO != null)
+                        cardDTO.delete();
+    }
 
     // Getters và Setters
 }

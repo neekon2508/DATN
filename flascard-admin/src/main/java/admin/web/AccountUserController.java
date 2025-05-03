@@ -50,6 +50,17 @@ public class AccountUserController {
         model.addAttribute("account_user_id", id);
         return "account_user_detail";
     }
+    @GetMapping("/search/{username}")
+    public String getByUserName(@PathVariable String username, Model model) {
+        Iterable<AccountUserDTO> users = accountUserService.findAccountUserDTOByUserName(username);
+        model.addAttribute("account_users", users);
+        return "account_user";
+    }
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        accountUserService.deleteAccountUserById(id);
+        return "redirect:/account_user";
+    }
     @PostMapping("/{id}/create_cardset")
     public String addCardSet(@PathVariable Long id, CardSetDTO cardSetDTO) {
         System.out.println(cardSetDTO);

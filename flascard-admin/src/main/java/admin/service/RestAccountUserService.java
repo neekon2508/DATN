@@ -52,6 +52,16 @@ public class RestAccountUserService implements AccountUserService{
        return restTemplate.patchForObject(corsOrigins+"/api/account_user/update/{id}", accountUserDTO, AccountUserDTO.class, id);
     }
 
+    @Override
+    public void deleteAccountUserById(Long id) {
+       restTemplate.delete(corsOrigins+"/api/account_user/delete/{id}", id);
+    }
+
+    @Override
+    public Iterable<AccountUserDTO> findAccountUserDTOByUserName(String userName) {
+        return Arrays.asList(restTemplate.getForObject(corsOrigins+"/api/account_user/getByUsername/{username}", AccountUserDTO[].class, userName));
+    }
+
 
 
 }

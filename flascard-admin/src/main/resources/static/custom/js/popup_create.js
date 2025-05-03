@@ -26,3 +26,21 @@ function openPopup3(event) {
 function closePopup3() {
 document.getElementById('popup3').classList.remove('show');
 }
+function confirmDelete(button, event) {
+    event.stopPropagation();
+    let url = button.getAttribute("data-url");
+    if (confirm("Bạn có chắc chắn muốn xóa?")) {
+        window.location.href = url;
+    }
+}
+function search(event) {
+    event.preventDefault();
+    let currentPage = window.location.pathname;
+    let searchInput = document.getElementById("input").value;
+    if (currentPage.includes("/account_user"))
+        window.location.href='/account_user/search/'+searchInput;
+    else if (currentPage.includes("/card_set"))
+        window.location.href='/card_set/search/'+searchInput;
+    else if (currentPage.includes("/card"))
+        window.location.href='/card/search/'+searchInput;
+}

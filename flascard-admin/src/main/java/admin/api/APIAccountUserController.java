@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import admin.dto.AccountUserDTO;
+import admin.dto.CardDTO;
 import admin.dto.CardSetDTO;
 import admin.entity.AccountUser;
 import admin.entity.CardSet;
@@ -67,13 +68,10 @@ public class APIAccountUserController {
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
     @GetMapping("/getByUsername/{username}")
-    public ResponseEntity<AccountUserDTO> accountUserByUserName(@PathVariable("username") String username) {
-        Optional<AccountUser> optAccountUser = accountUserRepository.findByUsername(username);
-
-        if (optAccountUser.isPresent()) {
-            return new ResponseEntity<>(optAccountUser.get().createDTO(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    public Iterable<AccountUserDTO> accountUserByUserName(@PathVariable("username") String username) {
+        var users = (List<AccountUserDTO>) allAccountUsers();
+        users.removeIf(user->!user.getUsername().contains(username));
+        return (Iterable<AccountUserDTO>) users;
     }
     @PostMapping(path="/create", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
@@ -108,7 +106,9 @@ public class APIAccountUserController {
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteAccountUser(@PathVariable("id") Long id) {
-        try {
+         try {
+            AccountUserDTO user = accountUserById(id).getBody();
+            user.delete();
             accountUserRepository.deleteById(id);
         } catch(EmptyResultDataAccessException e) {}
     }

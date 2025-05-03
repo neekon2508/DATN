@@ -40,4 +40,8 @@ public class RestCardSetService implements CardSetService{
     public CardSetDTO updateCardSet(Long id, CardSetDTO cardSetDTO) {
      return restTemplate.patchForObject(corsOrigins+"/api/card_set/update/{id}", cardSetDTO, CardSetDTO.class, id);
     }
+    @Override
+    public Iterable<CardSetDTO> getByName(String name) {
+     return Arrays.asList(restTemplate.getForObject(corsOrigins+"/api/card_set/getByName/{name}", CardSetDTO[].class, name));
+    }
 }

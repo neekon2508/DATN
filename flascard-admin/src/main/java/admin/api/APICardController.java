@@ -1,8 +1,11 @@
 package admin.api;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -16,10 +19,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import admin.dto.CardDTO;
+import admin.dto.CardSetDTO;
 import admin.entity.Card;
 import admin.repository.CardRepository;
 
@@ -49,14 +55,41 @@ public class APICardController {
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping("/getByText/{text}")
+    public Iterable<CardDTO> cardByName(@PathVariable("text") String text) {
+        var allCard = (List<CardDTO>)allCards();
+        List<CardDTO> test = new ArrayList<>();
+        for (CardDTO card : allCard) {
+            if (card.getFrontText().contains(text) || card.getBackText().contains(text))
+                test.add(card);
+        }
+        return (Iterable<CardDTO>) test;
+    }
     @PostMapping(path = "/create", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public Card postCard(@RequestBody Card card) {
         return cardRepository.save(card);
     }
+    @PostMapping("/upload_image")
+    public String uploadImage(@RequestParam("file") MultipartFile file) {
+        String directorySTring = "images";
+        try {
+            File directory = new File(directorySTring);
+            if (!directory.exists())
+                directory.mkdir();
+            String fileName = UUID.randomUUID().toString()+"_"+file.getOriginalFilename();
+            String filePath = directory + fileName;
 
+            file.transferTo(new File(filePath));
+
+            return filePath;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Lỗi khi lưu file";
+        }
+    }
     @PatchMapping(path = "/update/{id}", consumes = "application/json")
-    public Card putCard(@PathVariable("id") Long id, @RequestBody Card patch) {
+    public CardDTO putCard(@PathVariable("id") Long id, @RequestBody CardDTO patch) {
         Card card = cardRepository.findById(id).get();
         if (patch.getFrontText() != null)
             card.setFrontText(patch.getFrontText());
@@ -78,7 +111,7 @@ public class APICardController {
             card.setCreatedAt(patch.getCreatedAt());
         if (patch.getUpdatedAt() != null)
             card.setUpdatedAt(patch.getUpdatedAt());
-        return cardRepository.save(card);
+        return cardRepository.save(card).createDto();
     
     }
 
@@ -86,6 +119,8 @@ public class APICardController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCard(@PathVariable("id") Long id) {
         try {
+            CardDTO a = cardById(id).getBody();
+            a.delete();
             cardRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {}
     }

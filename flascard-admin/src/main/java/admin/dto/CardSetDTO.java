@@ -18,5 +18,10 @@ public class CardSetDTO {
         this.cards=cards;
     }
 
-
+    public void delete() {
+        if (!getCards().isEmpty())
+                 for (CardDTO cardDTO : getCards())
+                    if (cardDTO != null)
+                        cardDTO.delete();
+    }
 }
