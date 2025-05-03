@@ -44,4 +44,8 @@ public class RestCardSetService implements CardSetService{
     public Iterable<CardSetDTO> getByName(String name) {
      return Arrays.asList(restTemplate.getForObject(corsOrigins+"/api/card_set/getByName/{name}", CardSetDTO[].class, name));
     }
+    @Override
+    public void deleteCardSetById(Long id) {
+      restTemplate.delete(corsOrigins+"/api/card_set/delete/{id}", id);
+    }
 }

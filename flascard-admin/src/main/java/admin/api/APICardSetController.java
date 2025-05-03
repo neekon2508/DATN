@@ -1,5 +1,6 @@
 package admin.api;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,10 +54,13 @@ public class APICardSetController {
     }
 
     @GetMapping("/getByName/{name}")
-    public Iterable<CardSetDTO> getByName(@PathVariable String name) {
+    public Iterable<CardSetDTO> getByName(@PathVariable("name") String name) {
         var cardSets = (List<CardSetDTO>)allCardSets();
-        cardSets.removeIf(cardset->!cardset.getName().contains(name));
-        return (Iterable<CardSetDTO>)cardSets;
+        var result = new ArrayList<CardSetDTO>();
+        for (CardSetDTO cardset : cardSets)
+            if (cardset.getName().contains(name))
+                result.add(cardset);
+        return (Iterable<CardSetDTO>)result;
     }
     @PostMapping(path="/create_card/{id}", consumes ="application/json")
     @ResponseStatus(HttpStatus.CREATED)

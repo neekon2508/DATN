@@ -53,13 +53,13 @@ public class CardDTO {
         this.updatedAt = updatedAt;
     }
    public void delete() {
-        if (!frontImage.isEmpty())
+        if (frontImage != null)
             (new File(frontImage)).delete();
-        if (!backImage.isEmpty())
+        if (backImage != null)
             (new File(backImage)).delete();
-        if (!backImage.isEmpty())
+        if (backImage != null)
             (new File(backImage)).delete();
-        if (!backSound.isEmpty())
+        if (backSound != null)
             (new File(backSound)).delete();
     }
     

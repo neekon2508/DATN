@@ -10,4 +10,5 @@ public interface CardSetService {
     CardSetDTO addCardToCardSet(Long id, CardDTO cardDTO);
     CardSetDTO updateCardSet(Long id, CardSetDTO cardSetDTO);
     Iterable<CardSetDTO> getByName(String name);
+    void deleteCardSetById(Long id);
 }

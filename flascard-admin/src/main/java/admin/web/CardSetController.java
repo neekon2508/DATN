@@ -66,14 +66,14 @@ public class CardSetController {
             if (!directory.exists())
                 directory.mkdir();
             String fileName = "",filePath="";
-            if (image_of_front != null)
+            if (!image_of_front.isEmpty())
             {
                 fileName = UUID.randomUUID().toString()+"_"+image_of_front.getOriginalFilename();
                 filePath = directory.getAbsolutePath()+File.separator+ fileName;
                 image_of_front.transferTo(new File(filePath));
                 cardDTO.setFrontImage(filePath);
             }
-            if (image_of_back != null)
+            if (!image_of_back.isEmpty())
             {
                 fileName = UUID.randomUUID().toString()+"_"+image_of_back.getOriginalFilename();
                 filePath = directory.getAbsolutePath()+File.separator+ fileName;
@@ -86,14 +86,14 @@ public class CardSetController {
             if (!directory.exists())
                 directory.mkdir();
 
-            if (sound_of_front != null)
+            if (!sound_of_front.isEmpty())
             {
                 fileName = UUID.randomUUID().toString()+"_"+sound_of_front.getOriginalFilename();
                 filePath = directory.getAbsolutePath()+File.separator+ fileName;
                 sound_of_front.transferTo(new File(filePath));
                 cardDTO.setFrontSound(filePath);
             }
-            if (sound_of_back != null)
+            if (!sound_of_back.isEmpty())
             {
                 fileName = UUID.randomUUID().toString()+"_"+sound_of_back.getOriginalFilename();
                 filePath = directory.getAbsolutePath()+File.separator+ fileName;
@@ -110,6 +110,11 @@ public class CardSetController {
     @PostMapping("/update/{id}")
     public String updateCardSet(@PathVariable Long id, CardSetDTO cardSetDTO) {
         cardSetService.updateCardSet(id, cardSetDTO);
+        return "redirect:/card_set";
+    }
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Long id) {
+        cardSetService.deleteCardSetById(id);
         return "redirect:/card_set";
     }
 }

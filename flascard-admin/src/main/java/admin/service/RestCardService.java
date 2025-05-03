@@ -33,7 +33,7 @@ public class RestCardService implements CardService{
 
     @Override
     public CardDTO updateCard(Long id, CardDTO cardDTO) {
-       return restTemplate.patchForObject(corsOrigins+"/api/card/update{id}", cardDTO, CardDTO.class, id);
+       return restTemplate.patchForObject(corsOrigins+"/api/card/update/{id}", cardDTO, CardDTO.class, id);
     }
 
     @Override

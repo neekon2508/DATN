@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import admin.dto.CardDTO;
-import admin.dto.CardSetDTO;
 import admin.entity.Card;
 import admin.repository.CardRepository;
 

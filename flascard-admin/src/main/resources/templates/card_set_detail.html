@@ -77,18 +77,18 @@
                             <button class="btn btn-danger btn-sm" th:data-url="@{/card/delete/{id}(id=${card.id})}" onclick="confirmDelete(this, event)">Delete</button>
                         </td>
                         <div id="popup3" class="popup">
-                            <form th:action="@{/card/update/{id}(id=${card.id})}" method="post">
+                            <form th:action="@{/card/update/{id}(id=${card.id})}" method="post" enctype="multipart/form-data">
                                 <div class="mb-3">
                                     <label for="username" class="form-label">Front Text:</label>
                                     <input type="text" class="form-control" id="frontText" name="frontText" th:value="${card.frontText}" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="username" class="form-label">Front Image:</label>
-                                    <input type="text" class="form-control" id="frontImage" name="frontImage" th:value="${card.frontImage}">
+                                    <input type="file" class="form-control" id="image_of_front" name="image_of_front" accept="image/*">
                                 </div>
                                 <div class="mb-3">
                                     <label for="username" class="form-label">Front Sound:</label>
-                                    <input type="text" class="form-control" id="frontSound" name="frontSound" th:value="${card.frontSound}" >
+                                    <input type="file" class="form-control" id="sound_of_front" name="sound_of_front" accept="audio/*">
                                 </div>
                                 <div class="mb-3">
                                     <label for="username" class="form-label">Back Text:</label>
@@ -96,11 +96,11 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="username" class="form-label">Back Image:</label>
-                                    <input type="text" class="form-control" id="backImage" name="backImage" th:value="${card.backImage}" >
+                                    <input type="file" class="form-control" id="image_of_back" name="image_of_back" accept="image/*">
                                 </div>
                                 <div class="mb-3">
                                     <label for="username" class="form-label">Back Sound:</label>
-                                    <input type="text" class="form-control" id="backSound" name="backSound" th:value="${card.backSound}" >
+                                    <input type="file" class="form-control" id="sound_of_back" name="sound_of_back" accept="audio/*">
                                 </div>
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success">Add</button>
