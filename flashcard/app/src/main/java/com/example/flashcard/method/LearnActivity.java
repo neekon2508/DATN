@@ -10,21 +10,27 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.example.flashcard.MainActivity;
 import com.example.flashcard.R;
 import com.example.flashcard.data.ThemeManager;
 import com.example.flashcard.drawer.FlashCardSetFragment;
 import com.example.flashcard.drawer.HelpFragment;
+import com.example.flashcard.drawer.LogInActivity;
 import com.example.flashcard.drawer.SettingActivity;
 import com.example.flashcard.drawer.StatisticFragment;
 import com.example.flashcard.drawer.SupportFragment;
+import com.example.flashcard.service.RetrofitClient;
 import com.google.android.material.navigation.NavigationView;
+
+import retrofit2.Retrofit;
 
 public class LearnActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
-
+    SharedPreferences user;
     public static final String EXTRA_CARDSETID = "cardsetId";
     public static int CARDSETID = 0;
 
@@ -33,7 +39,7 @@ public class LearnActivity extends AppCompatActivity
         ThemeManager.setTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learn);
-
+        user = getSharedPreferences("USER", MODE_PRIVATE);
         Intent intent = getIntent();
         CARDSETID = Integer.parseInt(intent.getStringExtra(EXTRA_CARDSETID));
 
@@ -88,6 +94,16 @@ public class LearnActivity extends AppCompatActivity
             case R.id.nav_support:
                 fragment = new SupportFragment();
                 break;
+            case R.id.nav_log_in:
+                intent = new Intent(this, LogInActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.nav_log_out:
+                user.edit().clear().apply();
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                break;
             default:
                 fragment = new FlashCardSetFragment();
         }
@@ -95,8 +111,10 @@ public class LearnActivity extends AppCompatActivity
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.content_frame, fragment);
             ft.commit();
-        } else
+        }
+        else
             startActivity(intent);
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

@@ -44,7 +44,7 @@
         android:id="@+id/btnImageFrontUpload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/selectImage"/>
+        android:text="@string/selectImage" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

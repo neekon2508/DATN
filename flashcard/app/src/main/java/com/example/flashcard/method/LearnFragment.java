@@ -1,8 +1,11 @@
 package com.example.flashcard.method;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -25,11 +28,21 @@ import android.widget.Toast;
 import com.example.flashcard.R;
 import com.example.flashcard.data.Card;
 import com.example.flashcard.data.FlashCardSQLiteHelper;
+import com.example.flashcard.dto.CardDTO;
+import com.example.flashcard.service.APICardSet;
+import com.example.flashcard.service.RetrofitClient;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+
+import retrofit2.Retrofit;
 
 
 public class LearnFragment extends Fragment {
 
+    private static Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+    SharedPreferences user;
     private AnimatorSet front_anim;
     private AnimatorSet back_anim;
     private boolean isFront = true;
@@ -39,9 +52,14 @@ public class LearnFragment extends Fragment {
     private SQLiteDatabase db;
     private Cursor cardsCursor;
     private boolean firstCheck = false;
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        user = getActivity().getSharedPreferences("USER", MODE_PRIVATE);
 
         if (getArguments() != null) {
             cardsetId = getArguments().getInt("cardsetId", 0);
@@ -57,10 +75,7 @@ public class LearnFragment extends Fragment {
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_learn, container, false);
         setupCardArray(layout);
-        setupAnimator(layout);
 
-
-        setupButton(layout);
         return layout;
     }
 
@@ -102,22 +117,55 @@ public class LearnFragment extends Fragment {
 
     private void setupCardArray(View view) {
 
-        try {
-            FlashCardSQLiteHelper flashCardSQLiteHelper = new FlashCardSQLiteHelper(getContext());
-            db = flashCardSQLiteHelper.getReadableDatabase();
-            cardsCursor = db.query("CARD", new String[] {"_id", "FRONTTEXT","BACKTEXT"},
-                    "CARDSETID=?", new String[] {Integer.toString((int)cardsetId)}, null, null, null);
-            if( cardsCursor != null && cardsCursor.moveToFirst()) {
-                cards = new Card[cardsCursor.getCount()];
-                for(int i =0; i< cards.length; ++i) {
-                    cards[i] = new Card(cardsCursor.getInt(0),
-                                    cardsCursor.getString(1),
-                                    cardsCursor.getString(2));
-                    cardsCursor.moveToNext();
+        if (user != null)
+        {
+            APICardSet api = retrofit.create(APICardSet.class);
+            new Thread(()->{
+                CountDownLatch latch = new CountDownLatch(1);
+                try {
+                   List<CardDTO> listCards = api.getById(Long.parseLong(String.valueOf(cardsetId))).execute().body().getCards();
+                   cards = new Card[listCards.size()];
+                   for(int i = 0;i<cards.length;++i)
+                       cards[i] = new Card(listCards.get(i));
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+                latch.countDown();
+                try {
+                    latch.await();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                getActivity().runOnUiThread(() -> {
+                    setupButton(view);
+                    setupAnimator(view);
+                });
+
+            }).start();
+        }
+        else {
+            try {
+                FlashCardSQLiteHelper flashCardSQLiteHelper = new FlashCardSQLiteHelper(getContext());
+                db = flashCardSQLiteHelper.getReadableDatabase();
+                cardsCursor = db.query("CARD", new String[] {"_id", "FRONTTEXT","BACKTEXT"},
+                        "CARDSETID=?", new String[] {Integer.toString((int)cardsetId)}, null, null, null);
+                if( cardsCursor != null && cardsCursor.moveToFirst()) {
+                    cards = new Card[cardsCursor.getCount()];
+                    for(int i =0; i< cards.length; ++i) {
+                        cards[i] = new Card(cardsCursor.getInt(0),
+                                cardsCursor.getString(1),
+                                cardsCursor.getString(2));
+                        cardsCursor.moveToNext();
+                    }
+                }
+            setupAnimator(view);
+
+
+            setupButton(view);
+            } catch (SQLException e) {
+                Toast.makeText(getContext(), R.string.data_unavailable_message, Toast.LENGTH_SHORT).show();
             }
-        } catch (SQLException e) {
-            Toast.makeText(getContext(), R.string.data_unavailable_message, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -125,8 +173,11 @@ public class LearnFragment extends Fragment {
         TextView frontText = (TextView) layout.findViewById(R.id.front_text);
         TextView backText = (TextView) layout.findViewById(R.id.back_text);
 
-        frontText.setText(cards[cardIndex].getFrontText());
-        backText.setText(cards[cardIndex].getBackText());
+
+            frontText.setText(cards[cardIndex].getFrontText());
+            backText.setText(cards[cardIndex].getBackText());
+
+
 
         Bundle bundle = new Bundle();
         bundle.putInt("cardsetId", cardsetId);
