@@ -68,7 +68,11 @@ public class LogInActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         JsonObject message = response.body();
                         // Xử lý thông báo thành công
-                        user.edit().putString("username", username).apply();
+                        user
+                                .edit()
+                                .putString("username", message.get("username").getAsString())
+                                .putLong("id",message.get("id").getAsLong())
+                                .apply();
                         Toast.makeText(getApplicationContext(), message.get("message").getAsString(), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
