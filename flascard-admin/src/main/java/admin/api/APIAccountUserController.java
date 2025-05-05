@@ -121,7 +121,12 @@ public class APIAccountUserController {
         && passwordEncoder.matches(loginRequest.getPassword(), optionalAccountUser.get().getPassword())
         && optionalAccountUser.get().getAuthority().equals("ROLE_USER"))
         {
+            AccountUserDTO dto = optionalAccountUser.get().createDTO();
             response.put("message", "Login successfully");
+            response.put("id", dto.getId().toString());
+            response.put("username", dto.getUsername());
+            response.put("password", dto.getPassword());
+            response.put("role",dto.getAuthority());
             return ResponseEntity.ok(response);
         }
         response.put("message","Invalid username or password");
