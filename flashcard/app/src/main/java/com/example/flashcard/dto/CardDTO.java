@@ -1,5 +1,7 @@
 package com.example.flashcard.dto;
 
+import java.time.LocalDateTime;
+
 public class CardDTO {
 
     private Long id;
@@ -43,6 +45,12 @@ public class CardDTO {
         this.updatedAt = updatedAt;
     }
 
+    public CardDTO() {
+        isLearned = false;
+        learnedAt = LocalDateTime.now().toString();
+        createdAt = LocalDateTime.now().toString();
+        updatedAt = LocalDateTime.now().toString();
+    }
     public Long getId() {
         return id;
     }
@@ -89,5 +97,33 @@ public class CardDTO {
 
     public String getUpdatedAt() {
         return updatedAt;
+    }
+
+    public void setFrontText(String frontText) {
+        this.frontText = frontText;
+    }
+
+    public void setFrontImage(String frontImage) {
+        this.frontImage = frontImage;
+    }
+
+    public void setFrontSound(String frontSound) {
+        this.frontSound = frontSound;
+    }
+
+    public void setBackText(String backText) {
+        this.backText = backText;
+    }
+
+    public void setBackImage(String backImage) {
+        this.backImage = backImage;
+    }
+
+    public void setBackSound(String backSound) {
+        this.backSound = backSound;
+    }
+
+    public void setLearned(Boolean learned) {
+        isLearned = learned;
     }
 }

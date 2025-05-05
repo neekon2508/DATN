@@ -46,6 +46,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -114,20 +116,28 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
         //Populate the list_set ListView from a cursor
         ListView listView = view.findViewById(R.id.list_sets);
        if (user != null) {
-//           APIAccountUser api = retrofit.create(APIAccountUser.class);
-//           api.getByUsername(user.getString("username", null)).enqueue(new Callback<AccountUserDTO>() {
-//               @Override
-//               public void onResponse(Call<AccountUserDTO> call, Response<AccountUserDTO> response) {
-//                   AccountUserDTO accountUserDTO = response.body();
-//                   CardSetAdapter cardSetAdapter = new CardSetAdapter(view.getContext(), accountUserDTO.getCardSets());
-//                   listView.setAdapter(cardSetAdapter);
-//               }
-//
-//               @Override
-//               public void onFailure(Call<AccountUserDTO> call, Throwable t) {
-//                   Toast.makeText(view.getContext(),R.string.data_unavailable_message,Toast.LENGTH_SHORT).show();
-//               }
-//           });
+           APIAccountUser api = retrofit.create(APIAccountUser.class);
+           api.getById(user.getLong("id",0)).enqueue(new Callback<AccountUserDTO>() {
+               @Override
+               public void onResponse(Call<AccountUserDTO> call, Response<AccountUserDTO> response) {
+                   if (response.isSuccessful()) {
+                       AccountUserDTO accountUserDTO = response.body();
+                       List<CardSetDTO> cardSets = accountUserDTO.getCardSets();
+                       CardSetAdapter cardSetAdapter = new CardSetAdapter(
+                               view.getContext(),
+                               cardSets
+                       );
+                       listView.setAdapter(cardSetAdapter);
+
+                   } else
+                       Toast.makeText(view.getContext(),R.string.data_unavailable_message, Toast.LENGTH_SHORT).show();
+               }
+
+               @Override
+               public void onFailure(Call<AccountUserDTO> call, Throwable t) {
+                   Toast.makeText(view.getContext(),R.string.data_unavailable_message, Toast.LENGTH_SHORT).show();
+               }
+           });
        }
        else {
            try {
@@ -153,7 +163,7 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
             public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
                 if (user != null) {
                     CardSetDTO cardSetDTO = (CardSetDTO) listView.getItemAtPosition(position);
-                    if (cardSetDTO.getCards() != null) {
+                    if (!cardSetDTO.getCards().isEmpty()) {
                         Intent intent = new Intent(getActivity(), LearnActivity.class);
                         intent.putExtra(CreateCardActivity.EXTRA_CARDSETID, String.valueOf(cardSetDTO.getId()));
                         startActivity(intent);
@@ -300,8 +310,12 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
     @Override
     public void onDestroy() {
         super.onDestroy();
-        setsCursor.close();
-        db.close();
+        if (setsCursor != null)
+        {
+            setsCursor.close();
+            db.close();
+        }
+
     }
 
 //    private class UpdateSetTask extends AsyncTask<Integer, Void, Boolean> {

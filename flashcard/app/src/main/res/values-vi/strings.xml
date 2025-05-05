@@ -32,6 +32,12 @@
     <string name="create_card">Tạo Thẻ Nhớ</string>
     <string name="front">Mặt trước</string>
     <string name="back">Mặt sau</string>
+    <string name="frontImage">Ảnh Trước</string>
+    <string name="backImage">Ảnh Sau</string>
+    <string name="frontSound">Âm Thanh Mặt Trước</string>
+    <string name="backSound">Âm Thanh Mặt Sau</string>
+    <string name="selectImage">Chọn File Ảnh</string>
+    <string name="selectSound">Chọn File Âm Thanh</string>
 
     <string name="learn_title">Học Bài</string>
     <string name="Check">Kiểm Tra</string>

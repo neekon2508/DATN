@@ -28,8 +28,14 @@
     <string name="help_feedback">Feedback</string>
 
     <string name="create_card">Create Card</string>
-    <string name="front">Front</string>
-    <string name="back">Back</string>
+    <string name="front">Front Text</string>
+    <string name="back">Back Text</string>
+    <string name="frontImage">Front Image</string>
+    <string name="backImage">Back Image</string>
+    <string name="frontSound">Front Sound</string>
+    <string name="backSound">Back Sound</string>
+    <string name="selectImage">Select Image</string>
+    <string name="selectSound">Select Sound</string>
 
     <string name="learn_title">Learn</string>
     <string name="Check">Check</string>

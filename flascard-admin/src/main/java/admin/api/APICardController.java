@@ -69,18 +69,25 @@ public class APICardController {
     public Card postCard(@RequestBody Card card) {
         return cardRepository.save(card);
     }
-    @PostMapping("/upload_image")
-    public String uploadImage(@RequestParam("file") MultipartFile file) {
-        String directorySTring = "images";
+    @PostMapping("/upload")
+    public String upload(@RequestParam("file") MultipartFile file) {
+        String directoryImageString = "images";
+        String directorySoundString = "sounds";
+        File directory;
         try {
-            File directory = new File(directorySTring);
+            String contentType = file.getContentType();
+            if (contentType.startsWith("image/")) {
+             directory = new File(directoryImageString);
+            } else if (contentType.startsWith("audio/")) {
+                directory = new File(directorySoundString);
+            } else {
+                return null;
+            }
             if (!directory.exists())
                 directory.mkdir();
             String fileName = UUID.randomUUID().toString()+"_"+file.getOriginalFilename();
-            String filePath = directory + fileName;
-
+            String filePath = directory.getAbsolutePath()+File.separator+ fileName;
             file.transferTo(new File(filePath));
-
             return filePath;
         } catch (IOException e) {
             e.printStackTrace();
