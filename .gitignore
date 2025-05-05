@@ -3,3 +3,4 @@ Document/LightsailDefaultKey-ap-northeast-1.pem
 Document/mykey.ppk
 flascard-admin/variable.env
 Document/private_key.ppk
+flascard-admin/src/main/resources/application.yml

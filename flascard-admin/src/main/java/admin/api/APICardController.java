@@ -3,7 +3,9 @@ package admin.api;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -70,7 +72,8 @@ public class APICardController {
         return cardRepository.save(card);
     }
     @PostMapping("/upload")
-    public String upload(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Map<String,String>> upload(@RequestParam("file") MultipartFile file) {
+        Map<String,String> response = new HashMap<>();
         String directoryImageString = "images";
         String directorySoundString = "sounds";
         File directory;
@@ -81,17 +84,20 @@ public class APICardController {
             } else if (contentType.startsWith("audio/")) {
                 directory = new File(directorySoundString);
             } else {
-                return null;
+                response.put("error", "Định dạng không hợp lệ");
+                return ResponseEntity.badRequest().body(response);
             }
             if (!directory.exists())
                 directory.mkdir();
             String fileName = UUID.randomUUID().toString()+"_"+file.getOriginalFilename();
             String filePath = directory.getAbsolutePath()+File.separator+ fileName;
             file.transferTo(new File(filePath));
-            return filePath;
+             response.put("filePath", filePath);
+             return ResponseEntity.ok(response);
         } catch (IOException e) {
             e.printStackTrace();
-            return "Lỗi khi lưu file";
+            response.put("error", "Lỗi khi lưu file");
+            return ResponseEntity.internalServerError().body(response);
         }
     }
     @PatchMapping(path = "/update/{id}", consumes = "application/json")
