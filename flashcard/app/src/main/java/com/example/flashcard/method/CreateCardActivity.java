@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.flashcard.R;
@@ -162,25 +163,26 @@ protected void onActivityResult(int requestCode, int resultCode,  Intent data) {
     }
 
     private void reset() {
-        Button btnImageFrontUpload = findViewById(R.id.btnImageFrontUpload);btnImageFrontUpload.setBackgroundColor(Color.GRAY);
-        Button btnSoundFrontUpload = findViewById(R.id.btnSoundFrontUpload);btnSoundFrontUpload.setBackgroundColor(Color.GRAY);
-        Button btnImageBackUpload = findViewById(R.id.btnImageBackUpload);btnImageBackUpload.setBackgroundColor(Color.GRAY);
-        Button btnSoundBackUpload = findViewById(R.id.btnSoundBackUpload);btnSoundBackUpload.setBackgroundColor(Color.GRAY);
+        ImageButton btnImageFrontUpload = findViewById(R.id.btnImageFrontUpload);btnImageFrontUpload.setBackgroundColor(Color.GRAY);
+        ImageButton btnSoundFrontUpload = findViewById(R.id.btnSoundFrontUpload);btnSoundFrontUpload.setBackgroundColor(Color.GRAY);
+        ImageButton btnImageBackUpload = findViewById(R.id.btnImageBackUpload);btnImageBackUpload.setBackgroundColor(Color.GRAY);
+        ImageButton btnSoundBackUpload = findViewById(R.id.btnSoundBackUpload);btnSoundBackUpload.setBackgroundColor(Color.GRAY);
     }
     private void setupButton() {
-        Button btnImageFrontUpload = findViewById(R.id.btnImageFrontUpload);
+        ImageButton btnImageFrontUpload = findViewById(R.id.btnImageFrontUpload);
         btnImageFrontUpload.setOnClickListener(view -> openFileChooser("image/*", Utils.PICK_IMAGE_FRONT,btnImageFrontUpload));
 
-        Button btnSoundFrontUpload = findViewById(R.id.btnSoundFrontUpload);
+        ImageButton btnSoundFrontUpload = findViewById(R.id.btnSoundFrontUpload);
         btnSoundFrontUpload.setOnClickListener(view -> openFileChooser("audio/*", Utils.PICK_AUDIO_FRONT,btnSoundFrontUpload));
 //
-        Button btnImageBackUpload = findViewById(R.id.btnImageBackUpload);
+        ImageButton btnImageBackUpload = findViewById(R.id.btnImageBackUpload);
         btnImageBackUpload.setOnClickListener(view -> openFileChooser("image/*", Utils.PICK_IMAGE_BACK,btnImageBackUpload));
 //
-        Button btnSoundBackUpload = findViewById(R.id.btnSoundBackUpload);
+        ImageButton btnSoundBackUpload = findViewById(R.id.btnSoundBackUpload);
         btnSoundBackUpload.setOnClickListener(view -> openFileChooser("audio/*", Utils.PICK_AUDIO_BACK,btnSoundBackUpload));
     }
-    private void openFileChooser(String fileType, int requestCode, Button button) {
+
+    private void openFileChooser(String fileType, int requestCode, ImageButton button) {
         button.setBackgroundColor(Color.BLUE);
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType(fileType);

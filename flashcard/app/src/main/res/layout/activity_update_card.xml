@@ -12,26 +12,73 @@
         layout="@layout/toolbar_main"
         android:id="@+id/toolbar_create_card" />
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="@string/front" />
+        android:orientation="horizontal"
+        android:padding="16dp">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:textStyle="bold"
+            android:text="@string/front" />
+        <ImageButton
+            android:id="@+id/btnUpdateImageFrontUpload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_image"
+            android:contentDescription="@string/selectImage" />
+        <ImageButton
+            android:id="@+id/btnUpdateSoundFrontUpload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_audio"
+            android:contentDescription="@string/selectSound"/>
+    </LinearLayout>
     <EditText
-        android:id="@+id/change_front_text"
+        android:id="@+id/update_front_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"/>
 
-    <TextView
+    <!--    <ImageView-->
+    <!--        android:id="@+id/imageFrontView"-->
+    <!--        android:layout_width="200dp"-->
+    <!--        android:layout_height="200dp"-->
+    <!--        android:scaleType="centerCrop"/>-->
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="@string/back" />
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:textStyle="bold"
+            android:text="@string/back" />
+
+        <ImageButton
+            android:id="@+id/btnUpdateImageBackUpload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_image"
+            android:contentDescription="@string/selectImage"/>
+
+        <ImageButton
+            android:id="@+id/btnUpdateSoundBackUpload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_audio"
+            android:contentDescription="@string/selectImage"/>
+    </LinearLayout>
 
     <EditText
-        android:id="@+id/change_back_text"
+        android:id="@+id/update_back_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"/>

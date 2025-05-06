@@ -1,6 +1,7 @@
 package com.example.flashcard.service;
 
 import com.example.flashcard.dto.AccountUserDTO;
+import com.example.flashcard.dto.CardSetDTO;
 import com.google.gson.JsonObject;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public interface APIAccountUser {
     Call<AccountUserDTO> createAccountUser(@Body AccountUserDTO accountUserDTO);
 
     @POST("account_user/create_card_set/{id}")
-    Call<AccountUserDTO> createCardSet(@Path("id") Long id, @Body AccountUserDTO accountUserDTO);
+    Call<AccountUserDTO> createCardSet(@Path("id") Long id, @Body CardSetDTO cardSetDTO);
 
     @PATCH("account_user/update/{id}")
     Call<AccountUserDTO> update(@Path("id") Long id, @Body AccountUserDTO accountUserDTO);

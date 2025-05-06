@@ -15,6 +15,8 @@ public class CardSetDTO {
         this.cards = cards ;
     }
 
+    public CardSetDTO() {}
+
     public Long getId() {
         return id;
     }
@@ -29,5 +31,13 @@ public class CardSetDTO {
 
     public List<CardDTO> getCards() {
         return cards;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCards(List<CardDTO> cards) {
+        this.cards = cards;
     }
 }

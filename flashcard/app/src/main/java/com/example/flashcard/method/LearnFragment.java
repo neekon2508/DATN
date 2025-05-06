@@ -20,6 +20,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -211,6 +213,15 @@ public class LearnFragment extends Fragment {
                 ft.commit();
             }
             else Toast.makeText(getContext(),R.string.data_unavailable_message, Toast.LENGTH_SHORT).show();
+        });
+        ImageButton btnImage = layout.findViewById(R.id.btnImage);
+        ImageView imageView = layout.findViewById(R.id.imageViewDisplay);
+        btnImage.setOnClickListener(view -> {
+            imageView.setImageResource(R.drawable.flashcard);
+            if(imageView.getVisibility() != View.VISIBLE)
+                imageView.setVisibility(View.VISIBLE);
+            else
+                imageView.setVisibility(View.INVISIBLE);
         });
     }
 }

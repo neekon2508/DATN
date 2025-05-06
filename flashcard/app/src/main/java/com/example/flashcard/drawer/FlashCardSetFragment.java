@@ -19,6 +19,7 @@ import android.text.SpannableString;
 import android.text.style.AlignmentSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -41,8 +42,10 @@ import com.example.flashcard.method.CreateCardActivity;
 import com.example.flashcard.method.LearnActivity;
 import com.example.flashcard.method.ListCardActivity;
 import com.example.flashcard.service.APIAccountUser;
+import com.example.flashcard.service.APICardSet;
 import com.example.flashcard.service.RetrofitClient;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
 
@@ -75,10 +78,9 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
         setupListView(layout);
         return layout;
     }
-
     private void onClickDone() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
+        APIAccountUser api = retrofit.create(APIAccountUser.class);
         EditText editText = new EditText(getActivity());
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -88,15 +90,40 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
                 .setView(editText)
                 .setPositiveButton(R.string.ok,(d,i)->{
                     String setName = editText.getText().toString();
-                    try {
-                        FlashCardSQLiteHelper.insertCardSet(db, setName);
-                        Fragment fragment = new FlashCardSetFragment();
-                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                        ft.add(R.id.content_frame, fragment);
-                        ft.commit();
-                    } catch (SQLException e) {
-                        Toast.makeText(getContext(), R.string.data_unavailable_message, Toast.LENGTH_SHORT);
+                    if (user != null) {
+                        Long id = user.getLong("id",0);
+                        CardSetDTO newCardSet = new CardSetDTO();
+                        newCardSet.setName(setName);
+                        api.createCardSet(id, newCardSet).enqueue(new Callback<AccountUserDTO>() {
+                            @Override
+                            public void onResponse(Call<AccountUserDTO> call, Response<AccountUserDTO> response) {
+                                if (response.isSuccessful())
+                                {
+                                    Fragment fragment = new FlashCardSetFragment();
+                                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                                    ft.add(R.id.content_frame, fragment);
+                                    ft.commit();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<AccountUserDTO> call, Throwable t) {
+
+                            }
+                        });
                     }
+                    else {
+                        try {
+                            FlashCardSQLiteHelper.insertCardSet(db, setName);
+                            Fragment fragment = new FlashCardSetFragment();
+                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                            ft.add(R.id.content_frame, fragment);
+                            ft.commit();
+                        } catch (SQLException e) {
+                            Toast.makeText(getContext(), R.string.data_unavailable_message, Toast.LENGTH_SHORT);
+                        }
+                    }
+
                 })
                 .setNegativeButton(R.string.cancel_set, (d,i)->{})
                 .show();
@@ -208,17 +235,36 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> listView, View view, int position, long id) {
+                APICardSet api = retrofit.create(APICardSet.class);
                 PopupMenu popup = new PopupMenu(getContext(), view);
                 popup.getMenuInflater().inflate(R.menu.menu_card_set_popup, popup.getMenu());
                 popup.setGravity(Gravity.CENTER);
                 popup.setOnMenuItemClickListener(item -> {
                     switch(item.getItemId()) {
                         case R.id.action_add_card:
+                            CardSetDTO cardSetDTO = (CardSetDTO) listView.getItemAtPosition(position);
                             Intent intent = new Intent(getActivity(), CreateCardActivity.class);
-                            intent.putExtra(CreateCardActivity.EXTRA_CARDSETID, String.valueOf(id));
+                            intent.putExtra(CreateCardActivity.EXTRA_CARDSETID, String.valueOf(cardSetDTO.getId()));
                             startActivity(intent);
                             return true;
                         case R.id.action_see_all_card:
+                            if (user != null) {
+                                cardSetDTO = (CardSetDTO) listView.getItemAtPosition(position);
+                                if (!cardSetDTO.getCards().isEmpty()) {
+                                    intent = new Intent(getActivity(), ListCardActivity.class);
+                                    intent.putExtra(CreateCardActivity.EXTRA_CARDSETID, String.valueOf(cardSetDTO.getId()));
+                                    startActivity(intent);
+                                }else {
+                                    Snackbar snackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), R.string.empty_set, Snackbar.LENGTH_LONG);
+                                    snackbar.setAction(R.string.add, t -> {
+                                        Intent createIntent = new Intent(getActivity(), CreateCardActivity.class);
+                                        createIntent.putExtra(CreateCardActivity.EXTRA_CARDSETID, String.valueOf(cardSetDTO.getId()));
+                                        startActivity(createIntent);
+                                    });
+                                    snackbar.show();
+                                }
+                                return true;
+                            }
                             try (FlashCardSQLiteHelper flashCardSQLiteHelper = new FlashCardSQLiteHelper(getContext());
                                  SQLiteDatabase db = flashCardSQLiteHelper.getReadableDatabase();
                                  Cursor cardsCursor = db.query("CARD", new String[] {"_id"},
@@ -245,7 +291,7 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
                             return true;
                         case R.id.action_change_name_set:
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
+                            cardSetDTO = (CardSetDTO) listView.getItemAtPosition(position);
                             EditText editText = new EditText(getActivity());
                             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -256,33 +302,58 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
                                     .setView(editText)
                                     .setPositiveButton(R.string.ok,(d,i)->{
                                         String changeSetName = editText.getText().toString();
-                                        try {
-                                            FlashCardSQLiteHelper.updateCardSet(db, (int)id, changeSetName);
-                                            ((TextView)view).setText(changeSetName);
-                                            Toast.makeText(getContext(), R.string.complete, Toast.LENGTH_SHORT).show();
-                                        } catch (SQLException e) {
-                                            Toast.makeText(getContext(), R.string.data_unavailable_message, Toast.LENGTH_SHORT);
+                                        if (user != null) {
+                                            CardSetDTO update = new CardSetDTO();
+                                            update.setName(changeSetName);
+
+                                                new Thread(()->{
+                                                    try {
+                                                    api.update(cardSetDTO.getId(),update).execute();
+                                                } catch (Exception e) {e.printStackTrace();}
+                                                    }).start();
                                         }
+                                        else {
+                                            try {
+                                                FlashCardSQLiteHelper.updateCardSet(db, (int)id, changeSetName);
+                                            } catch (SQLException e) {
+                                                Toast.makeText(getContext(), R.string.data_unavailable_message, Toast.LENGTH_SHORT);
+                                            }
+                                        }
+                                        ((TextView)view).setText(changeSetName);
+                                        Toast.makeText(getContext(), R.string.complete, Toast.LENGTH_SHORT).show();
                                     })
                                     .setNegativeButton(R.string.cancel_set, (d,i)->{})
                                     .show();
                             return true;
                         case R.id.action_delete_set:
+                            cardSetDTO = (CardSetDTO) listView.getItemAtPosition(position);
                             builder = new AlertDialog.Builder(getActivity());
                             SpannableString title = new SpannableString(getString(R.string.want_to_delete));
                             title.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER), 0, title.length(), 0);
                             builder.setTitle(title)
                                     .setPositiveButton(R.string.ok,(d,i)->{
-                                        try {
-                                            FlashCardSQLiteHelper.deleteCardSet(db, (int)id);
-                                            Fragment fragment = new FlashCardSetFragment();
-                                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                                            ft.replace(R.id.content_frame, fragment);
-                                            ft.commit();
-                                            Toast.makeText(getContext(), R.string.complete, Toast.LENGTH_SHORT);
-                                        } catch (SQLException e) {
-                                            Toast.makeText(getContext(), R.string.data_unavailable_message, Toast.LENGTH_SHORT);
+                                        if (user != null) {
+                                            new Thread(()->{
+                                                try {
+                                                    api.delete(cardSetDTO.getId()).execute();
+                                                    Fragment fragment = new FlashCardSetFragment();
+                                                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                                                    ft.replace(R.id.content_frame, fragment);
+                                                    ft.commit();
+                                                } catch (Exception e) {e.printStackTrace();}
+                                            }).start();
+                                        } else {
+                                            try {
+                                                FlashCardSQLiteHelper.deleteCardSet(db, (int)id);
+                                                Fragment fragment = new FlashCardSetFragment();
+                                                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                                                ft.replace(R.id.content_frame, fragment);
+                                                ft.commit();
+                                            } catch (SQLException e) {
+                                                Toast.makeText(getContext(), R.string.data_unavailable_message, Toast.LENGTH_SHORT);
+                                            }
                                         }
+
                                     })
                                     .setNegativeButton(R.string.cancel_set, (d,i)->{})
                                     .show();

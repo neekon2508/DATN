@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.flashcard.MainActivity;
 import com.example.flashcard.R;
@@ -52,7 +53,7 @@ public class LearnActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        checkUser(navigationView);
         Bundle bundle = new Bundle();
         bundle.putInt("cardsetId", CARDSETID);
         Fragment fragment = new LearnFragment();
@@ -119,7 +120,19 @@ public class LearnActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
+    private void checkUser(NavigationView navigationView) {
+        String username = user.getString("username", null);
+        if (username != null) {
+            ((MenuItem)navigationView.getMenu().findItem(R.id.nav_log_in)).setVisible(false);
+            ((MenuItem)navigationView.getMenu().findItem(R.id.nav_log_out)).setVisible(true);
+            ((TextView)navigationView.getHeaderView(0).
+                    findViewById(R.id.hello_user)).setText(getString(R.string.hello_user)+", "+username);
+        }
+        else {
+            ((MenuItem)navigationView.getMenu().findItem(R.id.nav_log_in)).setVisible(true);
+            ((MenuItem)navigationView.getMenu().findItem(R.id.nav_log_out)).setVisible(false);
+        }
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

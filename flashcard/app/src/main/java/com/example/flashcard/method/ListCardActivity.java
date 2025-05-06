@@ -1,6 +1,7 @@
 package com.example.flashcard.method;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,15 +16,21 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
+import com.example.flashcard.MainActivity;
 import com.example.flashcard.R;
 import com.example.flashcard.data.ThemeManager;
 import com.example.flashcard.drawer.FlashCardSetFragment;
 import com.example.flashcard.drawer.HelpFragment;
+import com.example.flashcard.drawer.LogInActivity;
 import com.example.flashcard.drawer.SettingActivity;
 import com.example.flashcard.drawer.StatisticFragment;
 import com.example.flashcard.drawer.SupportFragment;
+import com.example.flashcard.service.RetrofitClient;
 import com.google.android.material.navigation.NavigationView;
+
+import retrofit2.Retrofit;
 
 
 public class ListCardActivity extends AppCompatActivity
@@ -31,9 +38,12 @@ public class ListCardActivity extends AppCompatActivity
 
     public static final String EXTRA_CARDSETID = "cardsetId";
     public static int CARDSETID = 0;
-
+    private static Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+    SharedPreferences user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        user = getSharedPreferences("USER", MODE_PRIVATE);
+
         ThemeManager.setTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learn);
@@ -52,7 +62,7 @@ public class ListCardActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        checkUser(navigationView);
 
         Bundle bundle = new Bundle();
         bundle.putInt("cardsetId", CARDSETID);
@@ -93,6 +103,7 @@ public class ListCardActivity extends AppCompatActivity
         int id = item.getItemId();
         Fragment fragment = null;
         Intent intent = null;
+
         switch (id) {
             case R.id.nav_cardSet:
                 fragment = new FlashCardSetFragment();
@@ -109,6 +120,16 @@ public class ListCardActivity extends AppCompatActivity
             case R.id.nav_support:
                 fragment = new SupportFragment();
                 break;
+            case R.id.nav_log_in:
+                intent = new Intent(this, LogInActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.nav_log_out:
+                user.edit().clear().apply();
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                break;
             default:
                 fragment = new FlashCardSetFragment();
         }
@@ -116,14 +137,27 @@ public class ListCardActivity extends AppCompatActivity
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.content_frame, fragment);
             ft.commit();
-        } else
+        }
+        else
             startActivity(intent);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
+    private void checkUser(NavigationView navigationView) {
+        String username = user.getString("username", null);
+        if (username != null) {
+            ((MenuItem)navigationView.getMenu().findItem(R.id.nav_log_in)).setVisible(false);
+            ((MenuItem)navigationView.getMenu().findItem(R.id.nav_log_out)).setVisible(true);
+            ((TextView)navigationView.getHeaderView(0).
+                    findViewById(R.id.hello_user)).setText(getString(R.string.hello_user)+", "+username);
+        }
+        else {
+            ((MenuItem)navigationView.getMenu().findItem(R.id.nav_log_in)).setVisible(true);
+            ((MenuItem)navigationView.getMenu().findItem(R.id.nav_log_out)).setVisible(false);
+        }
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

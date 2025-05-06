@@ -16,12 +16,31 @@
         layout="@layout/toolbar_main"
         android:id="@+id/toolbar_create_card" />
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="@string/front" />
+        android:orientation="horizontal"
+        android:padding="16dp">
 
+        <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textStyle="bold"
+        android:text="@string/front" />
+        <ImageButton
+            android:id="@+id/btnImageFrontUpload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_image"
+            android:contentDescription="@string/selectImage" />
+        <ImageButton
+            android:id="@+id/btnSoundFrontUpload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_audio"
+            android:contentDescription="@string/selectSound"/>
+    </LinearLayout>
     <EditText
         android:id="@+id/front_text"
         android:layout_width="match_parent"
@@ -34,63 +53,39 @@
 <!--        android:layout_height="200dp"-->
 <!--        android:scaleType="centerCrop"/>-->
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="@string/frontImage" />
+        android:orientation="horizontal"
+        android:padding="16dp">
 
-    <Button
-        android:id="@+id/btnImageFrontUpload"
+        <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/selectImage" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:padding="16dp"
-        android:text="@string/frontSound" />
-
-    <Button
-        android:id="@+id/btnSoundFrontUpload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/selectSound"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:textStyle="bold"
         android:text="@string/back" />
+
+        <ImageButton
+            android:id="@+id/btnImageBackUpload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_image"
+            android:contentDescription="@string/selectImage"/>
+
+        <ImageButton
+            android:id="@+id/btnSoundBackUpload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_audio"
+            android:contentDescription="@string/selectImage"/>
+    </LinearLayout>
 
     <EditText
         android:id="@+id/back_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="@string/backImage" />
-
-    <Button
-        android:id="@+id/btnImageBackUpload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/selectImage"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="@string/backSound" />
-
-    <Button
-        android:id="@+id/btnSoundBackUpload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/selectImage"/>
 
 </LinearLayout>
 </ScrollView>

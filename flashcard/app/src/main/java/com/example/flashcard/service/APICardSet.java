@@ -29,7 +29,7 @@ public interface APICardSet {
     Call<CardSetDTO> createCard(@Path("id") Long id, @Body CardDTO cardDTO);
 
     @PATCH("card_set/update/{id}")
-    Call<CardSetDTO> update(@Path("id") Long id, @Body CardSetDTO cardSetDTOc);
+    Call<CardSetDTO> update(@Path("id") Long id, @Body CardSetDTO cardSetDTO);
 
     @DELETE("card_set/delete/{id}")
     Call<Void> delete(@Path("id") Long id);
