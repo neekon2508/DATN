@@ -57,6 +57,8 @@ public class LearnActivity extends AppCompatActivity
         Bundle bundle = new Bundle();
         bundle.putInt("cardsetId", CARDSETID);
         Fragment fragment = new LearnFragment();
+
+
         fragment.setArguments(bundle);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.content_frame, fragment);

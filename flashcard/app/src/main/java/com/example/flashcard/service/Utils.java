@@ -16,6 +16,8 @@ import java.io.OutputStream;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class Utils {
 
@@ -73,6 +75,26 @@ public class Utils {
             return new File("");
         }
         return file;
+    }
+    public static File saveFile(Context context, ResponseBody body, String filePath) {
+        try {
+            // Tạo tên tệp dựa trên đường dẫn gốc
+            File file = new File(context.getExternalFilesDir(null), new File(filePath).getName());
+
+            InputStream inputStream = body.byteStream();
+            OutputStream outputStream = new FileOutputStream(file);
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            outputStream.close();
+            inputStream.close();
+            return file;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new File("");
+        }
     }
 
 }

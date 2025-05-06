@@ -63,6 +63,7 @@ public class UpdateCardActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         setupCardView();
+        setupButton();
     }
 
     @Override

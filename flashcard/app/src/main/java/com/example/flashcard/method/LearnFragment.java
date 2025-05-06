@@ -9,11 +9,15 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,11 +35,17 @@ import com.example.flashcard.R;
 import com.example.flashcard.data.Card;
 import com.example.flashcard.data.FlashCardSQLiteHelper;
 import com.example.flashcard.dto.CardDTO;
+import com.example.flashcard.service.APICard;
 import com.example.flashcard.service.APICardSet;
 import com.example.flashcard.service.RetrofitClient;
+import com.example.flashcard.service.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import retrofit2.Retrofit;
@@ -54,7 +64,8 @@ public class LearnFragment extends Fragment {
     private SQLiteDatabase db;
     private Cursor cardsCursor;
     private boolean firstCheck = false;
-
+    private static Map<String, File> mapFiles = new HashMap<>();
+    MediaPlayer mediaPlayer;
 
 
     @Override
@@ -93,6 +104,11 @@ public class LearnFragment extends Fragment {
 
         Button check_btn = (Button) layout.findViewById(R.id.check);
         check_btn.setOnClickListener(v->{
+            if (mediaPlayer!=null && mediaPlayer.isPlaying())
+            {
+                mediaPlayer.release();
+                mediaPlayer = null;
+            }
             if(isFront) {
                 front_anim.setTarget(card_front);
                 back_anim.setTarget(card_back);
@@ -121,7 +137,9 @@ public class LearnFragment extends Fragment {
 
         if (user != null)
         {
+            APICard apiCard = retrofit.create(APICard.class);
             APICardSet api = retrofit.create(APICardSet.class);
+            List<String> files = new ArrayList<>();
             new Thread(()->{
                 CountDownLatch latch = new CountDownLatch(1);
                 try {
@@ -129,6 +147,16 @@ public class LearnFragment extends Fragment {
                    cards = new Card[listCards.size()];
                    for(int i = 0;i<cards.length;++i)
                        cards[i] = new Card(listCards.get(i));
+                    listCards.parallelStream().forEach(card->{
+                        if (card.getFrontImage() !=null)
+                            files.add(card.getFrontImage());
+                        if (card.getFrontSound() !=null)
+                            files.add(card.getFrontSound());
+                        if (card.getBackImage() !=null)
+                            files.add(card.getBackImage());
+                        if (card.getBackSound() !=null)
+                            files.add(card.getBackSound());
+                    });
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -143,7 +171,11 @@ public class LearnFragment extends Fragment {
                     setupButton(view);
                     setupAnimator(view);
                 });
-
+                files.parallelStream().forEach(file-> {
+                    try {
+                        mapFiles.put(file, Utils.saveFile(view.getContext(),apiCard.download(file).execute().body(),file));
+                    } catch (Exception e) {e.printStackTrace();}
+                });
             }).start();
         }
         else {
@@ -193,6 +225,12 @@ public class LearnFragment extends Fragment {
         buttonPrevious.setOnClickListener(l-> {
             if(cardIndex > 0)
                 {
+                    if (mediaPlayer!=null && mediaPlayer.isPlaying())
+                    {
+                        mediaPlayer.release();
+                        mediaPlayer = null;
+                    }
+
                     cardIndex--;
                     bundle.putInt("cardIndex", cardIndex);
                     fragment.setArguments(bundle);
@@ -205,6 +243,12 @@ public class LearnFragment extends Fragment {
         buttonNext.setOnClickListener(l->{
             if(cardIndex < cards.length-1)
             {
+                if (mediaPlayer!=null && mediaPlayer.isPlaying())
+                {
+                    mediaPlayer.release();
+                    mediaPlayer = null;
+                }
+
                 cardIndex++;
                 bundle.putInt("cardIndex", cardIndex);
                 fragment.setArguments(bundle);
@@ -217,11 +261,72 @@ public class LearnFragment extends Fragment {
         ImageButton btnImage = layout.findViewById(R.id.btnImage);
         ImageView imageView = layout.findViewById(R.id.imageViewDisplay);
         btnImage.setOnClickListener(view -> {
-            imageView.setImageResource(R.drawable.flashcard);
+            imageView.setImageBitmap(null);
+            String file;
+            if (isFront) file = cards[cardIndex].getFrontImage();
+            else file =  cards[cardIndex].getBackImage();
+            if (file != null)
+            {
+                Bitmap bitmap = BitmapFactory.decodeFile(mapFiles.get(file).getAbsolutePath());
+                imageView.setImageBitmap(bitmap);
+            }
+//            imageView.setImageResource(R.drawable.flashcard);
+
             if(imageView.getVisibility() != View.VISIBLE)
                 imageView.setVisibility(View.VISIBLE);
             else
                 imageView.setVisibility(View.INVISIBLE);
         });
+        ImageButton btnSound = layout.findViewById(R.id.btnSound);
+        btnSound.setOnClickListener(view -> {
+            String file;
+            if (isFront) file = cards[cardIndex].getFrontSound();
+            else file= cards[cardIndex].getBackSound();
+            if (file != null)
+            {
+                try {
+                    if(mediaPlayer== null) {
+                        mediaPlayer = new MediaPlayer();
+                        mediaPlayer.setDataSource(mapFiles.get(file).getAbsolutePath());
+                        mediaPlayer.prepare();
+                        mediaPlayer.start();
+                    }
+                    else if (mediaPlayer.isPlaying())
+                        mediaPlayer.pause();
+                    else mediaPlayer.start();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        if (cardIndex ==0) buttonPrevious.setVisibility(View.INVISIBLE);
+        if (cardIndex==cards.length-1 || cards.length==1) buttonNext.setVisibility(View.INVISIBLE);
+        if (cardIndex>0 && cardIndex <cards.length-1) {
+            buttonPrevious.setVisibility(View.VISIBLE);
+            buttonNext.setVisibility(View.VISIBLE);
+        }
     }
+    @Override
+    public void onStop() {
+        super.onStop();
+        for(Map.Entry<String,File> file : mapFiles.entrySet()) {
+            if (file.getValue().exists())
+            {
+                file.getValue().delete();
+                Log.e("Đã xóa ",file.getValue().getAbsolutePath() );
+            }
+            else Log.e("Chưa xóa ", file.getValue().getAbsolutePath());
+        }
+        mapFiles = new HashMap<>();
+
+        if (mediaPlayer != null && mediaPlayer.isPlaying()){
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+
+
+    }
+
 }
