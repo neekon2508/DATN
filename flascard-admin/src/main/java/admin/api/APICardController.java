@@ -2,6 +2,8 @@ package admin.api;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,8 +12,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -100,21 +106,52 @@ public class APICardController {
             return ResponseEntity.internalServerError().body(response);
         }
     }
+    @GetMapping("/download")
+    public ResponseEntity<Resource> download(@RequestParam String filePath) {
+        try {
+            Path path = Paths.get(filePath).normalize();
+            Resource resource = new UrlResource(path.toUri());
+            if (!resource.exists() || !resource.isReadable()) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok()
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + path.getFileName().toString() + "\"")
+            .body(resource);
+
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
     @PatchMapping(path = "/update/{id}", consumes = "application/json")
     public CardDTO putCard(@PathVariable("id") Long id, @RequestBody CardDTO patch) {
         Card card = cardRepository.findById(id).get();
+        CardDTO old = new CardDTO(id, id, null, null, null, null, null, null, null, null, null, null);
         if (patch.getFrontText() != null)
             card.setFrontText(patch.getFrontText());
-        if (patch.getFrontImage() != null)
+        if (patch.getFrontImage() != null) {
+            old.setFrontImage(card.getFrontImage());
             card.setFrontImage(patch.getFrontImage());
-        if (patch.getFrontSound() != null)
+        }
+           
+        if (patch.getFrontSound() != null) {
+            old.setFrontSound(card.getFrontSound());
             card.setFrontSound(patch.getFrontSound());
+        }
+           
         if (patch.getBackText() != null)
             card.setBackText(patch.getBackText());
-        if (patch.getBackImage() != null)
+
+        if (patch.getBackImage() != null) {
+            old.setBackImage(card.getBackImage());
             card.setBackImage(patch.getBackImage());
-        if (patch.getBackSound() != null)
+        }
+           
+        if (patch.getBackSound() != null) {
+            card.setBackSound(card.getBackSound());
             card.setBackSound(patch.getBackSound());
+        }
+            
         if (patch.getIsLearned() != null)
             card.setIsLearned(patch.getIsLearned());
         if (patch.getLearnedAt() != null)
@@ -123,6 +160,7 @@ public class APICardController {
             card.setCreatedAt(patch.getCreatedAt());
         if (patch.getUpdatedAt() != null)
             card.setUpdatedAt(patch.getUpdatedAt());
+        old.delete();
         return cardRepository.save(card).createDto();
     
     }
