@@ -83,7 +83,7 @@ public class ListCardActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_create_card:
-                Intent intent = new Intent(this, ListCardActivity.class);
+                Intent intent = new Intent(this, CreateCardActivity.class);
                 intent.putExtra(CreateCardActivity.EXTRA_CARDSETID, String.valueOf(CARDSETID));
                 startActivity(intent);
                 return true;
