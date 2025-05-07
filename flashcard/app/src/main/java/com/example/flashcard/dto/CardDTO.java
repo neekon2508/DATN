@@ -126,4 +126,16 @@ public class CardDTO {
     public void setLearned(Boolean learned) {
         isLearned = learned;
     }
+
+    public void setLearnedAt(String learnedAt) {
+        this.learnedAt = learnedAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }

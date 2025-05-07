@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.anychart.ui.contextmenu.Item;
+import com.example.flashcard.R;
 import com.example.flashcard.dto.CardSetDTO;
 
 import java.util.List;
@@ -22,9 +23,11 @@ public class CardSetAdapter extends ArrayAdapter<CardSetDTO> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null)
-            convertView = LayoutInflater.from(getContext()).inflate(android.R.layout.simple_list_item_1, parent, false);
+//            convertView = LayoutInflater.from(getContext()).inflate(android.R.layout.simple_list_item_1, parent, false);
+           convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_card_set, parent, false);
         CardSetDTO cardSetDTO = getItem(position);
-        TextView textView = convertView.findViewById(android.R.id.text1);
+        TextView textView = convertView.findViewById(R.id.tvCardSetName);
+//        TextView textView = convertView.findViewById(android.R.id.text1);
         textView.setText(cardSetDTO.getName());
         return convertView;
     }

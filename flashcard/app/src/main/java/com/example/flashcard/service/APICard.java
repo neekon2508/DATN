@@ -25,6 +25,9 @@ public interface APICard {
     @POST("card/upload")
     Call<JsonObject> upload(@Part MultipartBody.Part file);
 
+    @GET("card/get_all")
+    Call<List<CardDTO>> allCards();
+
     @GET("card/get/{id}")
     Call<CardDTO> getById(@Path("id") Long id);
 

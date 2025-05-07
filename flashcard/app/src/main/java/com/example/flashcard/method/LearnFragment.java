@@ -42,6 +42,7 @@ import com.example.flashcard.service.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -102,6 +103,7 @@ public class LearnFragment extends Fragment {
         front_anim = (AnimatorSet) AnimatorInflater.loadAnimator(layout.getContext(), R.animator.front_animator);
         back_anim = (AnimatorSet) AnimatorInflater.loadAnimator(layout.getContext(), R.animator.back_animator);
 
+        APICard apiCard = retrofit.create(APICard.class);
         Button check_btn = (Button) layout.findViewById(R.id.check);
         check_btn.setOnClickListener(v->{
             if (mediaPlayer!=null && mediaPlayer.isPlaying())
@@ -122,14 +124,32 @@ public class LearnFragment extends Fragment {
                 front_anim.start();
                 isFront = true;
             }
-            try(FlashCardSQLiteHelper flashCardSQLiteHelper = new FlashCardSQLiteHelper(getContext());
-                SQLiteDatabase db = flashCardSQLiteHelper.getReadableDatabase()) {
-                if (!firstCheck) {
-                    FlashCardSQLiteHelper.updateCardByLearned(db, cards[cardIndex].getId(), 1);
+            if (user != null) {
+                CardDTO update = new CardDTO();
+                String now = LocalDateTime.now().toString();
+                if (!firstCheck)
+                {
                     firstCheck = true;
+                    update.setLearned(true);
+                    update.setLearnedAt(now);
                 }
-                FlashCardSQLiteHelper.updateCardByLearnedAt(db, cardIndex);
+                update.setUpdatedAt(now);
+                new Thread(()->{
+                    try {
+                        apiCard.update(Long.valueOf((long)cards[cardIndex].getId()),update).execute();
+                    }catch (Exception e) {e.printStackTrace();}
+                }).start();
+            } else {
+                try(FlashCardSQLiteHelper flashCardSQLiteHelper = new FlashCardSQLiteHelper(getContext());
+                    SQLiteDatabase db = flashCardSQLiteHelper.getReadableDatabase()) {
+                    if (!firstCheck) {
+                        FlashCardSQLiteHelper.updateCardByLearned(db, cards[cardIndex].getId(), 1);
+                        firstCheck = true;
+                    }
+                    FlashCardSQLiteHelper.updateCardByLearnedAt(db, cardIndex);
+                }
             }
+
         });
     }
 

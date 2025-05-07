@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -75,6 +76,10 @@ public class APICardController {
     @PostMapping(path = "/create", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public Card postCard(@RequestBody Card card) {
+        String now = LocalDateTime.now().toString();
+        card.setCreatedAt(now);
+        card.setUpdatedAt(now);
+        card.setIsLearned(false);
         return cardRepository.save(card);
     }
     @PostMapping("/upload")

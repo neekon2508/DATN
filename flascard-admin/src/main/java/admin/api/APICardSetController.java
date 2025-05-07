@@ -1,5 +1,6 @@
 package admin.api;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -65,6 +66,7 @@ public class APICardSetController {
     @PostMapping(path="/create_card/{id}", consumes ="application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public CardSetDTO addCardtoCardSet(@PathVariable Long id, @RequestBody CardDTO cardDTO) {
+        String now = LocalDateTime.now().toString();
         CardSet cardSet = cardSetRepository.findById(id).get();
         Card newCard = new Card();
         newCard.setFrontText(cardDTO.getFrontText());
@@ -73,6 +75,9 @@ public class APICardSetController {
         newCard.setBackText(cardDTO.getBackText());
         newCard.setBackImage(cardDTO.getBackImage());
         newCard.setBackSound(cardDTO.getBackSound());
+        newCard.setIsLearned(false);
+        newCard.setCreatedAt(now);
+        newCard.setUpdatedAt(now);
 
         newCard.setCardSet(cardSet);
         cardSet.getCards().add(newCard);

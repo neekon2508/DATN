@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,6 +13,7 @@
     android:background="@drawable/round_back_yellow"
     tools:context=".drawer.SupportFragment">
 
+
     <TextView
         android:textSize="30dp"
         android:textStyle="bold"
@@ -21,5 +23,37 @@
         android:layout_margin="10dp"
         android:textColor="@color/black"
         android:text="@string/support_title" />
+
+    <TextView
+        android:id="@+id/btn_donate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:text="@string/help_donate"
+        android:background="@drawable/textview_border" />
+
+    <TextView
+        android:id="@+id/btn_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:text="@string/help_feedback"
+        android:background="@drawable/textview_border" />
+
+
+    <ImageView
+        android:id="@+id/donateView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:contentDescription="Thank you!"
+        android:src="@drawable/qr"
+        android:visibility="invisible"
+        android:layout_gravity="center"/>
 
 </LinearLayout>

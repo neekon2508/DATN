@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         user = getSharedPreferences("USER", MODE_PRIVATE);
+        if (user.getString("username",null)==null)
+            startActivity(new Intent(this,LogInActivity.class));
         ThemeManager.setTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
