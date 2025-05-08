@@ -17,6 +17,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -226,6 +227,8 @@ public class LearnFragment extends Fragment {
     private void setupButton(View layout) {
         TextView frontText = (TextView) layout.findViewById(R.id.front_text);
         TextView backText = (TextView) layout.findViewById(R.id.back_text);
+        backText.setMovementMethod(new ScrollingMovementMethod());
+        frontText.setMovementMethod(new ScrollingMovementMethod());
 
 
             frontText.setText(cards[cardIndex].getFrontText());

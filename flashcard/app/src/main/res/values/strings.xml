@@ -39,7 +39,7 @@
 
     <string name="learn_title">Learn</string>
     <string name="Check">Check</string>
-    <string name="button_previous">Previous</string>
+    <string name="button_previous">Back</string>
     <string name="button_next">Next</string>
 
     <string name="menu_cardset_add_card">Add Flash Card</string>

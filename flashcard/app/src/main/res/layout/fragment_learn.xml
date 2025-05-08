@@ -1,115 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".method.LearnFragment">
 
-    <TextView
-        android:id="@+id/front_text"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:background="?attr/colorPrimary"
-        android:gravity="center"
-        android:textAlignment="center"
-        android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/back_text"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:alpha="0"
-        android:background="@color/purple_200"
-        android:gravity="center"
-        android:textAlignment="center"
-        android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.498" />
-
-    <Button
-        android:id="@+id/check"
-        android:layout_width="wrap_content"
+    tools:context=".method.LearnFragment"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:text="Check"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/front_text"
-        app:layout_constraintVertical_bias="0.488" />
-
-    <Button
-        android:id="@+id/button_next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="67dp"
-        android:text="@string/button_next"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/check"
-        app:layout_constraintTop_toBottomOf="@+id/front_text"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <Button
-        android:id="@+id/button_previous"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginBottom="67dp"
-        android:text="@string/button_previous"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/check"
-        app:layout_constraintHorizontal_bias="0.116"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/front_text"
-        app:layout_constraintVertical_bias="1.0" />
-
+        android:orientation="horizontal"
+        android:layout_margin="20dp"
+        android:layout_weight="1"
+        android:layout_gravity="center">
     <ImageButton
         android:id="@+id/btnImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="-50dp"
+        android:layout_margin="30dp"
+        android:layout_weight="1"
         android:contentDescription="@string/selectImage"
-        android:src="@drawable/icon_image"
-        app:layout_constraintBottom_toTopOf="@+id/front_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.28"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.497" />
+        android:src="@drawable/icon_image" />
 
     <ImageButton
         android:id="@+id/btnSound"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="-50dp"
+        android:layout_margin="30dp"
         android:contentDescription="@string/selectImage"
-        android:src="@drawable/icon_audio"
-        app:layout_constraintBottom_toTopOf="@+id/front_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.727"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.497" />
-
+        android:src="@drawable/icon_audio" />
+    </LinearLayout>
     <ImageView
         android:id="@+id/imageViewDisplay"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/back_text"
-        app:layout_constraintEnd_toEndOf="@+id/front_text"
-        app:layout_constraintStart_toStartOf="@+id/back_text"
-        app:layout_constraintTop_toTopOf="@+id/front_text" />
+        android:visibility="gone" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:fillViewport="true"
+        android:layout_weight="1">
+        <FrameLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/front_text"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="?attr/colorPrimary"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textSize="22sp"
+                android:scrollbars="vertical"/>
+
+            <TextView
+                android:id="@+id/back_text"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:alpha="0"
+                android:background="@color/purple_200"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textSize="22sp"
+                android:scrollbars="vertical"/>
+        </FrameLayout>
+    </ScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="1"
+        android:layout_gravity="bottom">
+
+        <Button
+            android:id="@+id/button_previous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:text="@string/button_previous" />
+
+        <Button
+            android:id="@+id/check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:text="Check" />
+
+
+        <Button
+            android:id="@+id/button_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:text="@string/button_next" />
+    </LinearLayout>
+
+
+
+
+
+
+
+</LinearLayout>
