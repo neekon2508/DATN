@@ -25,6 +25,7 @@
         android:text="@string/help_title" />
 
     <TextView
+        android:id="@+id/btn_use"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
@@ -35,6 +36,7 @@
         android:background="@drawable/textview_border" />
 
     <TextView
+        android:id="@+id/btn_community"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -45,6 +47,7 @@
         android:background="@drawable/textview_border" />
 
     <TextView
+        android:id="@+id/btn_privacy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
