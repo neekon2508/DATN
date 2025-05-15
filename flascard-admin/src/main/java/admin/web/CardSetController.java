@@ -21,6 +21,7 @@ import admin.dto.CardDTO;
 import admin.dto.CardSetDTO;
 import admin.entity.AccountUser;
 import admin.service.CardSetService;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/card_set")
@@ -108,13 +109,16 @@ public class CardSetController {
         return "redirect:/card_set/"+id;
     }
     @PostMapping("/update/{id}")
-    public String updateCardSet(@PathVariable Long id, CardSetDTO cardSetDTO) {
+    public String updateCardSet(@PathVariable Long id, CardSetDTO cardSetDTO, HttpServletRequest request) {
         cardSetService.updateCardSet(id, cardSetDTO);
-        return "redirect:/card_set";
+        
+        String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/card_set");
     }
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Long id) {
+    public String delete(@PathVariable("id") Long id, HttpServletRequest request) {
         cardSetService.deleteCardSetById(id);
-        return "redirect:/card_set";
+        String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/card_set");
     }
 }

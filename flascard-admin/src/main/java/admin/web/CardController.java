@@ -20,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import admin.dto.CardDTO;
 import admin.entity.AccountUser;
 import admin.service.CardService;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/card")
@@ -48,7 +50,7 @@ public class CardController {
         @RequestParam("image_of_back") MultipartFile image_of_back,
         @RequestParam("sound_of_front") MultipartFile sound_of_front,
         @RequestParam("sound_of_back") MultipartFile sound_of_back,
-        CardDTO cardDTO) {
+        CardDTO cardDTO, HttpServletRequest request) {
 
         String imagesDirectory = "images";
         String soundDirectory = "sounds";
@@ -96,12 +98,16 @@ public class CardController {
         }
 
         cardService.updateCard(id, cardDTO);
-        return "redirect:/card";
+        String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/card_set");
+
     }
     @GetMapping("/delete/{id}")
-    public String deleteCard(@PathVariable Long id) {
+    public String deleteCard(@PathVariable Long id, HttpServletRequest request) {
         cardService.deleteCard(id);
-        return "redirect:/card";
+                String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/card_set");
+
     }
 
 }

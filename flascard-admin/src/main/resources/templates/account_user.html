@@ -59,11 +59,11 @@
                         <td th:text="${account_user.password}"></td>
                         <td th:text="${account_user.authority}"></td>
                         <td>
-                            <button class="btn btn-primary btn-sm" onclick="openPopup1(event)">Edit</button>
+                            <button class="btn btn-primary btn-sm" th:attr="data-popup-id='popup-'+${account_user.id}" onclick="openPopup1(this, event)">Edit</button>
                             <button class="btn btn-danger btn-sm" th:data-url="@{/account_user/delete/{id}(id=${account_user.id})}" onclick="confirmDelete(this, event)">Delete</button>
 
                         </td>
-                        <div id="popup1" class="popup">
+                        <div th:id="'popup-'+${account_user.id}" class="popup">
                             <form th:action="@{/account_user/update/{id}(id=${account_user.id})}" method="post">
                                 <div class="mb-3">
                                     <label for="username" class="form-label">Username:</label>
@@ -83,7 +83,7 @@
                                 </div>
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success">Add</button>
-                                    <button type="button" class="btn btn-secondary" onclick="closePopup1()">Đóng</button>
+                                    <button type="button" class="btn btn-secondary" th:attr="data-popup-id='popup-'+${account_user.id}" onclick="closePopup1(this)">Đóng</button>
                                 </div>
                             </form>
                         </div>
