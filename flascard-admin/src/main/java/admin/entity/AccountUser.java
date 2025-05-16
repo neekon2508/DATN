@@ -42,10 +42,6 @@ public class AccountUser implements UserDetails{
     private String username;
     private String password;
     private String authority;
-
-    // @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    // @JoinColumn(name="card_set")
-    // private List<CardSet> cardSets = new ArrayList<>();
   
     public AccountUser(String username, String password, String authority) {
         this.username = username;
@@ -86,10 +82,7 @@ public class AccountUser implements UserDetails{
   public void addCardSet(CardSet cardSet) {
     card_sets.add(cardSet);
   }
-  // @JsonProperty("cardsets")
-  // public List<String> getCardSets() {
-  //   return card_sets.stream().map(CardSet::getName).toList();
-  // }
+
   public AccountUserDTO createDTO() {
     return new AccountUserDTO(id, username, password, authority, card_sets.stream().map(cardset->cardset.createDTO()).toList());
   }
