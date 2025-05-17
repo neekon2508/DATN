@@ -14,12 +14,15 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.example.flashcard.MainActivity;
 import com.example.flashcard.R;
+import com.example.flashcard.data.BackgroundManager;
 import com.example.flashcard.data.ThemeManager;
 import com.example.flashcard.drawer.FlashCardSetFragment;
 import com.example.flashcard.drawer.HelpFragment;
@@ -40,6 +43,7 @@ public class ListCardActivity extends AppCompatActivity
     public static int CARDSETID = 0;
     private static Retrofit retrofit = RetrofitClient.getRetrofitInstance();
     SharedPreferences user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         user = getSharedPreferences("USER", MODE_PRIVATE);
@@ -63,20 +67,36 @@ public class ListCardActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         checkUser(navigationView);
+        BackgroundManager.setDefaultBackground(this, navigationView);
 
         Bundle bundle = new Bundle();
         bundle.putInt("cardsetId", CARDSETID);
         ListCardFragment fragment = new ListCardFragment();
         fragment.setArguments(bundle);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.content_frame, fragment);
+        ft.replace(R.id.content_frame, fragment, "LIST_CARD_TAG");
         ft.commit();
     }
 
     @Override
     public boolean onCreateOptionsMenu (Menu menu) {
         getMenuInflater().inflate(R.menu.menu_list_card, menu);
-        return super.onCreateOptionsMenu(menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search_card);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                sendSearchQueryToFragment(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                sendSearchQueryToFragment(newText);
+                return true;
+            }
+        });
+        return true;
     }
 
     @Override
@@ -87,15 +107,20 @@ public class ListCardActivity extends AppCompatActivity
                 intent.putExtra(CreateCardActivity.EXTRA_CARDSETID, String.valueOf(CARDSETID));
                 startActivity(intent);
                 return true;
-            case R.id.action_search_card:
 
-                return true;
-            case R.id.action_more_vert:
-
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    private void sendSearchQueryToFragment(String query) {
+        ListCardFragment fragment = (ListCardFragment) getSupportFragmentManager().findFragmentByTag("LIST_CARD_TAG");
+        if (fragment != null && fragment.isAdded()) {
+            Log.d("DEBUG", "Gửi truy vấn tìm kiếm: " + query);
+            fragment.filterList(query);
+        } else {
+            Log.e("ERROR", "Không tìm thấy Fragment!");
+        }
+
     }
 
     @Override

@@ -9,38 +9,27 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
-import android.text.Layout;
-import android.text.SpannableString;
-import android.text.style.AlignmentSpan;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.flashcard.R;
 import com.example.flashcard.adapter.CardAdapter;
 import com.example.flashcard.data.Card;
 import com.example.flashcard.data.FlashCardSQLiteHelper;
-import com.example.flashcard.drawer.FlashCardSetFragment;
 import com.example.flashcard.dto.CardDTO;
 import com.example.flashcard.dto.CardSetDTO;
 import com.example.flashcard.service.APICardSet;
 import com.example.flashcard.service.RetrofitClient;
-import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -56,6 +45,10 @@ public class ListCardFragment extends Fragment {
     private static Card[] cards;
     private SQLiteDatabase db;
     private Cursor cardsCursor;
+    List<CardDTO> dataList = new ArrayList<>();
+    CardAdapter adapter;
+    ListView listView;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,13 +62,33 @@ public class ListCardFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_list_card, container, false);
-        setupListView(layout);
+         listView = layout.findViewById(R.id.list_cards);
+        setupListView(layout, listView);
         return layout;
     }
 
-    private void setupListView(View view) {
+    public void filterList(String query) {
+        if (adapter == null || dataList == null) return;
+
+        List<CardDTO> filteredList = new ArrayList<>();
+        for (CardDTO item : dataList) {
+            if (item.getFrontText().toLowerCase().contains(query.toLowerCase())) {
+                filteredList.add(item);
+            }
+        }
+
+        if (query.isEmpty()) { // Nếu SearchView trống, hiển thị lại toàn bộ danh sách
+            filteredList = new ArrayList<>(dataList);
+        }
+
+        adapter = new CardAdapter(getContext(), filteredList);
+        listView.setAdapter(adapter); // Gán lại Adapter cho ListView
+        adapter.notifyDataSetChanged();
+    }
+
+    private void setupListView(View view, ListView listView) {
         //Populate the list_set ListView from a cursor
-        ListView listView = view.findViewById(R.id.list_cards);
+
         if (user != null) {
             APICardSet api = retrofit.create(APICardSet.class);
             api.getById(Long.parseLong(String.valueOf(cardsetId))).enqueue(new Callback<CardSetDTO>() {
@@ -83,9 +96,9 @@ public class ListCardFragment extends Fragment {
                 public void onResponse(Call<CardSetDTO> call, Response<CardSetDTO> response) {
                     if (response.isSuccessful()) {
                         CardSetDTO cardSetDTO = response.body();
-                        List<CardDTO> cards = cardSetDTO.getCards();
-                        CardAdapter cardAdapter = new CardAdapter(view.getContext(),cards);
-                        listView.setAdapter(cardAdapter);
+                         dataList = cardSetDTO.getCards();
+                         adapter = new CardAdapter(view.getContext(),dataList);
+                        listView.setAdapter(adapter);
                     } else
                         Toast.makeText(view.getContext(),R.string.data_unavailable_message, Toast.LENGTH_SHORT).show();
 

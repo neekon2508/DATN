@@ -11,6 +11,8 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -44,6 +46,18 @@ public class StatisticFragment extends Fragment {
     long learnedCount;
     private static Retrofit retrofit = RetrofitClient.getRetrofitInstance();
     SharedPreferences user;
+    @Override
+    public void onViewCreated( View view,  Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setHasOptionsMenu(true); // Cho phép Fragment cập nhật menu
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        menu.clear(); // Xóa menu hiện tại để tránh bị trùng lặp
+        inflater.inflate(R.menu.menu_default, menu); // Thêm menu mới
+        super.onCreateOptionsMenu(menu, inflater);
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

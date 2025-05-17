@@ -32,11 +32,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.flashcard.R;
+import com.example.flashcard.adapter.CardAdapter;
 import com.example.flashcard.adapter.CardSetAdapter;
 import com.example.flashcard.data.FlashCardSQLiteHelper;
 
+import com.example.flashcard.data.LocaleHelper;
 import com.example.flashcard.data.ThemeManager;
 import com.example.flashcard.dto.AccountUserDTO;
+import com.example.flashcard.dto.CardDTO;
 import com.example.flashcard.dto.CardSetDTO;
 import com.example.flashcard.method.CreateCardActivity;
 import com.example.flashcard.method.LearnActivity;
@@ -49,6 +52,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -62,17 +66,18 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
     private Cursor setsCursor;
     private static Retrofit retrofit = RetrofitClient.getRetrofitInstance();
     SharedPreferences user;
-
+    List<CardSetDTO> dataList = new ArrayList<>();
+    CardSetAdapter adapter;
+    ListView listView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ThemeManager.setTheme(getContext());
-
         user = getActivity().getSharedPreferences("USER", MODE_PRIVATE);
 
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_flash_card_set, container, false);
-
+        LocaleHelper.setAppLocale(layout.getContext());
         FloatingActionButton createSet = layout.findViewById(R.id.createSet);
         createSet.setOnClickListener(this);
         setupListView(layout);
@@ -141,20 +146,20 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
 
     private void setupListView(View view) {
         //Populate the list_set ListView from a cursor
-        ListView listView = view.findViewById(R.id.list_sets);
-       if (user != null) {
+         listView = view.findViewById(R.id.list_sets);
+       if (user.getString("username",null)!=null) {
            APIAccountUser api = retrofit.create(APIAccountUser.class);
            api.getById(user.getLong("id",0)).enqueue(new Callback<AccountUserDTO>() {
                @Override
                public void onResponse(Call<AccountUserDTO> call, Response<AccountUserDTO> response) {
                    if (response.isSuccessful()) {
                        AccountUserDTO accountUserDTO = response.body();
-                       List<CardSetDTO> cardSets = accountUserDTO.getCardSets();
-                       CardSetAdapter cardSetAdapter = new CardSetAdapter(
+                       dataList = accountUserDTO.getCardSets();
+                       adapter= new CardSetAdapter(
                                view.getContext(),
-                               cardSets
+                               dataList
                        );
-                       listView.setAdapter(cardSetAdapter);
+                       listView.setAdapter(adapter);
 
                    } else
                        Toast.makeText(view.getContext(),R.string.data_unavailable_message, Toast.LENGTH_SHORT).show();
@@ -188,7 +193,7 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
-                if (user != null) {
+                if (user.getString("username",null)!=null) {
                     CardSetDTO cardSetDTO = (CardSetDTO) listView.getItemAtPosition(position);
                     if (!cardSetDTO.getCards().isEmpty()) {
                         Intent intent = new Intent(getActivity(), LearnActivity.class);
@@ -248,7 +253,7 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
                             startActivity(intent);
                             return true;
                         case R.id.action_see_all_card:
-                            if (user != null) {
+                            if (user.getString("username",null)!=null) {
                                 cardSetDTO = (CardSetDTO) listView.getItemAtPosition(position);
                                 if (!cardSetDTO.getCards().isEmpty()) {
                                     intent = new Intent(getActivity(), ListCardActivity.class);
@@ -302,7 +307,7 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
                                     .setView(editText)
                                     .setPositiveButton(R.string.ok,(d,i)->{
                                         String changeSetName = editText.getText().toString();
-                                        if (user != null) {
+                                        if (user.getString("username",null)==null) {
                                             CardSetDTO update = new CardSetDTO();
                                             update.setName(changeSetName);
 
@@ -332,7 +337,7 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
                             title.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER), 0, title.length(), 0);
                             builder.setTitle(title)
                                     .setPositiveButton(R.string.ok,(d,i)->{
-                                        if (user != null) {
+                                        if (user.getString("username",null)!=null) {
                                             new Thread(()->{
                                                 try {
                                                     api.delete(cardSetDTO.getId()).execute();
@@ -378,6 +383,25 @@ public class FlashCardSetFragment extends Fragment implements View.OnClickListen
 //        adapter.changeCursor(newCursor);
 //        setsCursor = newCursor;
 //    }
+public void filterList(String query) {
+    if (adapter == null || dataList == null) return;
+
+    List<CardSetDTO> filteredList = new ArrayList<>();
+    for (CardSetDTO item : dataList) {
+        if (item.getName().toLowerCase().contains(query.toLowerCase())) {
+            filteredList.add(item);
+        }
+    }
+
+    if (query.isEmpty()) { // Nếu SearchView trống, hiển thị lại toàn bộ danh sách
+        filteredList = new ArrayList<>(dataList);
+    }
+
+    adapter = new CardSetAdapter(getContext(), filteredList);
+    listView.setAdapter(adapter); // Gán lại Adapter cho ListView
+    adapter.notifyDataSetChanged();
+}
+
     @Override
     public void onDestroy() {
         super.onDestroy();

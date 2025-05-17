@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.example.flashcard.MainActivity;
 import com.example.flashcard.R;
+import com.example.flashcard.data.BackgroundManager;
 import com.example.flashcard.data.ThemeManager;
 import com.example.flashcard.drawer.FlashCardSetFragment;
 import com.example.flashcard.drawer.HelpFragment;
@@ -53,6 +54,7 @@ public class LearnActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        BackgroundManager.setDefaultBackground(this, navigationView);
         checkUser(navigationView);
         Bundle bundle = new Bundle();
         bundle.putInt("cardsetId", CARDSETID);

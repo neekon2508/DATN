@@ -18,12 +18,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.example.flashcard.data.BackgroundManager;
 import com.example.flashcard.data.FlashCardSQLiteHelper;
+import com.example.flashcard.data.LocaleHelper;
 import com.example.flashcard.data.ThemeManager;
 import com.example.flashcard.drawer.FlashCardSetFragment;
 import com.example.flashcard.drawer.HelpFragment;
@@ -31,6 +35,7 @@ import com.example.flashcard.drawer.LogInActivity;
 import com.example.flashcard.drawer.SettingActivity;
 import com.example.flashcard.drawer.StatisticFragment;
 import com.example.flashcard.drawer.SupportFragment;
+import com.example.flashcard.method.ListCardFragment;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;
@@ -41,6 +46,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         user = getSharedPreferences("USER", MODE_PRIVATE);
+        LocaleHelper.setAppLocale(this);
         if (user.getString("username",null)==null)
             startActivity(new Intent(this,LogInActivity.class));
         ThemeManager.setTheme(this);
@@ -61,7 +67,7 @@ public class MainActivity extends AppCompatActivity
 
         Fragment fragment = new FlashCardSetFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.content_frame, fragment);
+        ft.replace(R.id.content_frame, fragment, "CARD_SET_TAG");
         ft.commit();
     }
 
@@ -116,6 +122,7 @@ public class MainActivity extends AppCompatActivity
         }
         if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
             ft.replace(R.id.content_frame, fragment);
             ft.commit();
         }
@@ -127,6 +134,37 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu (Menu menu) {
+
+        getMenuInflater().inflate(R.menu.menu_list_cardset, menu); // Nếu là ListCardFragment, dùng menu list_cardset
+            MenuItem searchItem = menu.findItem(R.id.action_search_cardset);
+            SearchView searchView = (SearchView) searchItem.getActionView();
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    sendSearchQueryToFragment(query);
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    sendSearchQueryToFragment(newText);
+                    return true;
+                }
+            });
+        return true;
+    }
+    private void sendSearchQueryToFragment(String query) {
+        FlashCardSetFragment fragment = (FlashCardSetFragment) getSupportFragmentManager().findFragmentByTag("CARD_SET_TAG");
+        if (fragment != null && fragment.isAdded()) {
+            Log.d("DEBUG", "Gửi truy vấn tìm kiếm: " + query);
+            fragment.filterList(query);
+        } else {
+            Log.e("ERROR", "Không tìm thấy Fragment!");
+        }
+
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

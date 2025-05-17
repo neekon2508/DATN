@@ -40,6 +40,7 @@ public class SettingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ThemeManager.setTheme(this);
+        LocaleHelper.setAppLocale(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
@@ -56,7 +57,6 @@ public class SettingActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.setting_list_view);
         String[] setting_items = {
                 getResources().getString(R.string.language),
-                getResources().getString(R.string.notification),
                 getResources().getString(R.string.appearance),
                 getResources().getString(R.string.about)
         };
@@ -75,20 +75,17 @@ public class SettingActivity extends AppCompatActivity {
                 AlertDialog dialog = builder.create();
                 dialog.show();
                 RadioGroup radioGroup = view.findViewById(R.id.radio_language);
-                String defaultLanguage = LocaleHelper.language;
                 radioGroup.check(getResources()
-                        .getIdentifier(defaultLanguage, "id", getPackageName()));
+                        .getIdentifier(LocaleHelper.getLanguagePreference(view.getContext()), "id", getPackageName()));
                 radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
                         String landcode = getResources().getResourceEntryName(checkedId);
-                        LocaleHelper.setAppLocale(this, landcode);
+                        LocaleHelper.saveLanguagePreference(getApplicationContext(), landcode);
                 Intent intent = new Intent(this, SettingActivity.class);
                 finish();
                 startActivity(intent);
                 });
                 break;
                 case 1:
-                    break;
-                case 2:
                     Intent intent = new Intent(this, AppearanceActivity.class);
                     startActivity(intent);
                     break;
