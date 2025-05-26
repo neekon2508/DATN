@@ -18,6 +18,7 @@ import com.example.flashcard.dto.AccountUserDTO;
 import com.example.flashcard.method.SignUpActivity;
 import com.example.flashcard.service.APIAccountUser;
 import com.example.flashcard.service.RetrofitClient;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
 
 import retrofit2.Call;
@@ -53,6 +54,8 @@ public class LogInActivity extends AppCompatActivity {
 
         Button btn_log_in = (Button) findViewById(R.id.btn_log_in);
         btn_log_in.setOnClickListener(v->{
+            System.out.println("Test");
+
             String username = editText_UserName.getText().toString();
             String password = editText_Password.getText().toString();
 
@@ -66,6 +69,7 @@ public class LogInActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                     if (response.isSuccessful()) {
+                        Snackbar.make(findViewById(android.R.id.content), "Success", Snackbar.LENGTH_SHORT).show();
                         JsonObject message = response.body();
                         // Xử lý thông báo thành công
                         user
@@ -73,14 +77,13 @@ public class LogInActivity extends AppCompatActivity {
                                 .putString("username", message.get("username").getAsString())
                                 .putLong("id",message.get("id").getAsLong())
                                 .apply();
-                        Toast.makeText(getApplicationContext(), message.get("message").getAsString(), Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        Intent intent = new Intent(LogInActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
 
                     } else {
                         // Xử lý lỗi đăng nhập
-                        Toast.makeText(getApplicationContext(), "Login failed!", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(android.R.id.content), "Failed", Snackbar.LENGTH_SHORT).show();
                         editText_UserName.setText("");
                         editText_Password.setText("");
                     }

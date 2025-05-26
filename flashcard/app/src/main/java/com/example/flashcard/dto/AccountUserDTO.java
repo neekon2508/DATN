@@ -21,6 +21,11 @@ public class AccountUserDTO {
         this.cardSets = cardSets;
     }
 
+    public AccountUserDTO(String username, String password, String authority) {
+        this.username = username;
+        this.password = password;
+        this.authority = authority;
+    }
     public void setUsername(String username) {
         this.username = username;
     }

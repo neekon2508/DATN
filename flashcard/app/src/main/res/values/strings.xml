@@ -71,4 +71,5 @@
     <string name="sign_up">Sign Up</string>
     <string name="log_out">Log Out</string>
     <string name="hello_user">Hello</string>
+    <string name="account_exist">Account already exists</string>
 </resources>

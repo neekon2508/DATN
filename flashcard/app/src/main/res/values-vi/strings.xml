@@ -72,4 +72,6 @@
     <string name="sign_up">Đăng Ký</string>
     <string name="log_out">Đăng Xuất</string>
     <string name="hello_user">Xin Chào</string>
+    <string name="account_exist">Tài khoản đã tồn tại</string>
+
 </resources>
